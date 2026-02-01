@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:guardian_app/core/config/app_config.dart';
 import 'package:guardian_app/core/constants/api_constants.dart';
 import 'package:guardian_app/providers/auth_provider.dart';
@@ -29,7 +29,8 @@ void mainCommon(AppConfig config) {
 
   // Create repositories
   final authRepository = AuthRepository();
-  final dashboardRepository = DashboardRepository(authRepository: authRepository);
+  final dashboardRepository =
+      DashboardRepository(authRepository: authRepository);
   final recordsRepository = RecordsRepository(authRepository: authRepository);
   final registryRepository = RegistryRepository(authRepository: authRepository);
   final adminDashboardRepository = AdminDashboardRepository(authRepository);
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
   final AdminDashboardRepository adminDashboardRepository;
 
   const MyApp({
-    super.key, 
+    super.key,
     required this.config,
     required this.authRepository,
     required this.dashboardRepository,
@@ -64,8 +65,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return MultiProvider(
       providers: [
         Provider<AppConfig>.value(value: config),
@@ -119,8 +118,10 @@ class MyApp extends StatelessWidget {
             secondary: const Color(0xFF004d00),
           ),
           scaffoldBackgroundColor: Colors.grey[50],
-          fontFamily: GoogleFonts.tajawal().fontFamily,
-          textTheme: GoogleFonts.tajawalTextTheme(textTheme),
+          fontFamily: 'Tajawal',
+          textTheme: const TextTheme(
+            bodyMedium: TextStyle(fontFamily: 'Tajawal'),
+          ).apply(fontFamily: 'Tajawal'),
           appBarTheme: const AppBarTheme(
             backgroundColor: Color(0xFF006400),
             foregroundColor: Colors.white,
@@ -134,7 +135,7 @@ class MyApp extends StatelessWidget {
             textDirection: TextDirection.rtl,
             child: child!,
           );
-          
+
           if (config.isDev) {
             return Banner(
               message: 'تجريـــب',
