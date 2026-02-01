@@ -13,6 +13,7 @@ class AdminGuardianRepository {
     int page = 1,
     String status = 'all',
     String? searchQuery,
+    String? includes,
   }) async {
     final token = await _authRepository.getToken();
     if (token == null) throw Exception('Not authenticated');
@@ -32,6 +33,10 @@ class AdminGuardianRepository {
       // For now, search by serial number or use a specific filter if configured
       // Spatie Exact Filter on serial_number
       queryParams['filter[serial_number]'] = searchQuery;
+    }
+
+    if (includes != null) {
+      queryParams['include'] = includes;
     }
 
     final uri = Uri.parse('${ApiConstants.baseUrl}/guardians')

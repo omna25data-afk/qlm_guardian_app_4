@@ -9,7 +9,7 @@ class AdminAreasRepository {
 
   AdminAreasRepository({required this.baseUrl});
 
-  Future<List<AdminArea>> getAreas({int page = 1, String? searchQuery, String? type}) async {
+  Future<List<AdminArea>> getAreas({int page = 1, String? searchQuery, String? type, String? parentId}) async {
     final token = await _storage.read(key: 'auth_token');
     
     // Construct query parameters
@@ -21,6 +21,9 @@ class AdminAreasRepository {
     }
     if (type != null) {
       queryParams['filter[type]'] = type;
+    }
+    if (parentId != null) {
+      queryParams['filter[parent_id]'] = parentId;
     }
     // Only active areas
     queryParams['filter[is_active]'] = '1';
@@ -49,6 +52,6 @@ class AdminAreasRepository {
   }
 
   Future<List<AdminArea>> getDistricts({String? query}) => getAreas(searchQuery: query, type: 'عزلة');
-  Future<List<AdminArea>> getVillages({String? query}) => getAreas(searchQuery: query, type: 'قرية');
-  Future<List<AdminArea>> getLocalities({String? query}) => getAreas(searchQuery: query, type: 'محل');
+  Future<List<AdminArea>> getVillages({String? query, String? parentId}) => getAreas(searchQuery: query, type: 'قرية', parentId: parentId);
+  Future<List<AdminArea>> getLocalities({String? query, String? parentId}) => getAreas(searchQuery: query, type: 'محل', parentId: parentId);
 }

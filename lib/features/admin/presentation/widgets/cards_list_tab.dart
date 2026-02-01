@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:guardian_app/features/admin/data/models/admin_renewal_model.dart';
+import 'package:guardian_app/features/admin/data/models/admin_guardian_model.dart';
 import 'package:guardian_app/providers/admin_renewals_provider.dart';
 import 'dart:async';
 
@@ -18,7 +18,6 @@ class _CardsListTabState extends State<CardsListTab> {
   @override
   void initState() {
     super.initState();
-    // Initial fetch
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchData();
     });
@@ -48,14 +47,13 @@ class _CardsListTabState extends State<CardsListTab> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Search Bar
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: TextField(
             controller: _searchController,
             onChanged: _onSearchChanged,
             decoration: InputDecoration(
-              hintText: 'بحث عن بطاقة (اسم الأمين، رقم البطاقة...)',
+              hintText: 'بحث عن بطاقة...',
               prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -68,7 +66,6 @@ class _CardsListTabState extends State<CardsListTab> {
           ),
         ),
 
-        // List
         Expanded(
           child: Consumer<AdminRenewalsProvider>(
             builder: (context, provider, child) {
@@ -99,7 +96,7 @@ class _CardsListTabState extends State<CardsListTab> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.credit_card_outlined, size: 60, color: Colors.grey[300]),
+                      Icon(Icons.badge_outlined, size: 60, color: Colors.grey[300]),
                       const SizedBox(height: 16),
                       Text(
                         'لا توجد بطاقات',
@@ -130,8 +127,8 @@ class _CardsListTabState extends State<CardsListTab> {
                       );
                     }
 
-                    final renewal = provider.cards[index];
-                    return _buildRenewalCard(context, renewal);
+                    final guardian = provider.cards[index];
+                    return _buildGuardianCardRenewalCard(context, guardian);
                   },
                 ),
               );
@@ -142,7 +139,9 @@ class _CardsListTabState extends State<CardsListTab> {
     );
   }
 
-  Widget _buildRenewalCard(BuildContext context, AdminRenewal renewal) {
+  Widget _buildGuardianCardRenewalCard(BuildContext context, dynamic guardian) {
+    if (guardian is! AdminGuardian) return const SizedBox();
+    
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -156,46 +155,80 @@ class _CardsListTabState extends State<CardsListTab> {
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    renewal.guardianName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        guardian.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                    _buildStatusBadge(guardian.cardStatus, guardian.cardStatusColor),
+                  ],
                 ),
-                _buildStatusBadge(renewal.status, renewal.statusColor),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                     Icon(Icons.credit_card, size: 14, color: Colors.grey[600]),
+                     const SizedBox(width: 4),
+                     Text('البطاقة: ${guardian.professionCardNumber ?? "-"}', style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+                     const Spacer(),
+                     Icon(Icons.event, size: 14, color: Colors.grey[600]),
+                     const SizedBox(width: 4),
+                     Text('الانتهاء: ${guardian.professionCardExpiryDate ?? "-"}', style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+                  ],
+                ),
               ],
             ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]),
-                const SizedBox(width: 4),
-                Text(
-                  'تاريخ الإصدار: ${renewal.renewalDate}', // Assuming renewal_date maps to issue/expiry relevant for card
-                  style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+          
+           if (guardian.cardRenewals != null && guardian.cardRenewals!.isNotEmpty) ...[
+             const Divider(height: 1, indent: 16, endIndent: 16),
+             Padding(
+               padding: const EdgeInsets.all(12),
+               child: Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                   const Text('آخر التجديدات:', style: TextStyle(fontFamily: 'Tajawal', fontSize: 11, fontWeight: FontWeight.bold, color: Colors.purple)),
+                   const SizedBox(height: 8),
+                   ...guardian.cardRenewals!.take(2).map((renewal) {
+                     return Padding(
+                       padding: const EdgeInsets.only(bottom: 6.0),
+                       child: Row(
+                         children: [
+                           const Icon(Icons.history, size: 14, color: Colors.grey),
+                           const SizedBox(width: 4),
+                           Text('رقم: ${renewal['renewal_number'] ?? "-"}', style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                           const SizedBox(width: 12),
+                           const Icon(Icons.date_range, size: 14, color: Colors.grey),
+                           const SizedBox(width: 4),
+                           Text('تاريخ: ${renewal['renewal_date'] ?? "-"}', style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                           const Spacer(),
+                           Text('ينتهي: ${renewal['expiry_date'] ?? "-"}', style: const TextStyle(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold)),
+                         ],
+                       ),
+                     );
+                   }),
+                 ],
+               ),
+             ),
+           ],
+        ],
       ),
     );
   }
 
-  Widget _buildStatusBadge(String text, String colorName) {
+  Widget _buildStatusBadge(String? text, String? colorName) {
     Color color;
     switch (colorName) {
       case 'success': color = Colors.green; break;
@@ -212,7 +245,7 @@ class _CardsListTabState extends State<CardsListTab> {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        text,
+        text ?? '-',
         style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
       ),
     );

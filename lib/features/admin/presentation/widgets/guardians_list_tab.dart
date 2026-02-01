@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:guardian_app/features/admin/data/models/admin_guardian_model.dart';
 import 'package:guardian_app/providers/admin_guardians_provider.dart';
 import 'package:guardian_app/features/admin/presentation/screens/add_edit_guardian_screen.dart';
+import 'package:guardian_app/features/admin/presentation/screens/guardian_details_screen.dart';
 
 class GuardiansListTab extends StatefulWidget {
   const GuardiansListTab({super.key});
@@ -74,6 +75,16 @@ class _GuardiansListTabState extends State<GuardiansListTab> with SingleTickerPr
      if (result == true) {
        _fetchData();
      }
+     if (result == true) {
+       _fetchData();
+     }
+  }
+
+  void _navigateToDetails(AdminGuardian guardian) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => GuardianDetailsScreen(guardian: guardian)),
+    );
   }
 
   void _showSortSheet() {
@@ -105,6 +116,64 @@ class _GuardiansListTabState extends State<GuardiansListTab> with SingleTickerPr
         setState(() => _sortOption = value);
         // Here you would typically call _fetchData() with the new sort option
         Navigator.pop(ctx);
+      },
+    );
+      },
+    );
+  }
+
+  void _showFilterSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+             const Text('تصفية النتائج', style: TextStyle(fontFamily: 'Tajawal', fontWeight: FontWeight.bold, fontSize: 18)),
+             const SizedBox(height: 20),
+             const Text('حالة العمل', style: TextStyle(fontFamily: 'Tajawal', fontWeight: FontWeight.bold)),
+             const SizedBox(height: 10),
+             Wrap(
+               spacing: 10,
+               children: [
+                 _buildFilterChip('الكل', true),
+                 _buildFilterChip('على رأس العمل', false),
+                 _buildFilterChip('متوقف', false),
+               ],
+             ),
+             const SizedBox(height: 20),
+             SizedBox(
+               width: double.infinity,
+               child: ElevatedButton(
+                 onPressed: () {
+                   Navigator.pop(context);
+                   _fetchData();
+                 },
+                 style: ElevatedButton.styleFrom(
+                   backgroundColor: Theme.of(context).primaryColor,
+                   foregroundColor: Colors.white,
+                   padding: const EdgeInsets.symmetric(vertical: 12),
+                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                 ),
+                 child: const Text('تطبيق', style: TextStyle(fontFamily: 'Tajawal', fontWeight: FontWeight.bold)),
+               ),
+             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterChip(String label, bool isSelected) {
+    return ChoiceChip(
+      label: Text(label, style: TextStyle(fontFamily: 'Tajawal', color: isSelected ? Colors.white : Colors.black)),
+      selected: isSelected,
+      selectedColor: Theme.of(context).primaryColor,
+      onSelected: (bool selected) {
+        // Implement filter logic
       },
     );
   }
@@ -147,7 +216,9 @@ class _GuardiansListTabState extends State<GuardiansListTab> with SingleTickerPr
                   ),
                 ),
                 const SizedBox(width: 8),
-                _buildIconButton(Icons.filter_list, Colors.orange, () {}), // Advanced Filter
+                ),
+                const SizedBox(width: 8),
+                _buildIconButton(Icons.filter_list, Colors.orange, _showFilterSheet), // Advanced Filter
                 const SizedBox(width: 8),
                 _buildIconButton(Icons.sort, Colors.blue, _showSortSheet), // Sort
               ],
@@ -249,8 +320,9 @@ class _GuardiansListTabState extends State<GuardiansListTab> with SingleTickerPr
     
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.blue.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.blue.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4)),
         ],
@@ -310,19 +382,21 @@ class _GuardiansListTabState extends State<GuardiansListTab> with SingleTickerPr
                     ],
                   ),
                 ),
+                ),
                 // Smart Circles
                 _buildSmartCircle(
-                    title: 'الترخيص', 
-                    expiryDateStr: guardian.licenseExpiryDate, 
-                    totalDays: 1095, // 3 years
-                    color: Colors.purple
+                    title: 'الهوية', 
+                    color: guardian.identityStatusColor
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
+                _buildSmartCircle(
+                    title: 'الترخيص', 
+                    color: guardian.licenseStatusColor
+                ),
+                const SizedBox(width: 8),
                 _buildSmartCircle(
                     title: 'البطاقة', 
-                    expiryDateStr: guardian.professionCardExpiryDate, 
-                    totalDays: 365, // 1 year
-                    color: Colors.teal
+                    color: guardian.cardStatusColor
                 ),
               ],
             ),
@@ -371,14 +445,14 @@ class _GuardiansListTabState extends State<GuardiansListTab> with SingleTickerPr
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // View Button (Placeholder)
+                      // View Button
                       InkWell(
-                        onTap: () {},
+                        onTap: () => _navigateToDetails(guardian),
                         borderRadius: BorderRadius.circular(8),
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                             color: Colors.green.withValues(alpha: 0.1),
+                             color: Colors.green.withOpacity(0.1),
                              borderRadius: BorderRadius.circular(8)
                           ),
                           child: const Row(
@@ -410,51 +484,22 @@ class _GuardiansListTabState extends State<GuardiansListTab> with SingleTickerPr
      );
   }
 
-  Widget _buildSmartCircle({required String title, required String? expiryDateStr, required int totalDays, required Color color}) {
-     // Prepare data
-     final now = DateTime.now();
-     DateTime? expiry;
-     int remainingDays = 0;
-     double percent = 0.0;
-     Color statusColor = Colors.grey;
-
-     if (expiryDateStr != null) {
-       expiry = DateTime.tryParse(expiryDateStr);
-       if (expiry != null) {
-         remainingDays = expiry.difference(now).inDays;
-         if (remainingDays < 0) remainingDays = 0;
-         percent = (remainingDays / totalDays).clamp(0.0, 1.0);
-         
-         if (remainingDays > 30) {
-           statusColor = Colors.green;
-         } else if (remainingDays > 0) {
-           statusColor = Colors.orange;
-         } else {
-           statusColor = Colors.red;
-         }
-       }
-     }
-
+  Widget _buildSmartCircle({required String title, required Color color}) {
      return Column(
        children: [
-         Stack(
-           alignment: Alignment.center,
-           children: [
-             SizedBox(
-               width: 40,
-               height: 40,
-               child: CircularProgressIndicator(
-                 value: percent,
-                 backgroundColor: Colors.grey[200],
-                 color: statusColor,
-                 strokeWidth: 4,
-               ),
-             ),
-             Text(
-               remainingDays > 999 ? '+999' : remainingDays.toString(),
-               style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: statusColor),
-             ),
-           ],
+         Container(
+           width: 36,
+           height: 36,
+           decoration: BoxDecoration(
+             shape: BoxShape.circle,
+             color: color.withOpacity(0.1),
+             border: Border.all(color: color, width: 2),
+           ),
+           child: Icon(
+             color == Colors.green ? Icons.check : (color == Colors.orange ? Icons.priority_high : Icons.close),
+             color: color,
+             size: 20,
+           ),
          ),
          const SizedBox(height: 4),
          Text(title, style: const TextStyle(fontSize: 10, fontFamily: 'Tajawal', color: Colors.grey)),

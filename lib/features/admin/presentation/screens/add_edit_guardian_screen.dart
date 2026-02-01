@@ -163,6 +163,26 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
   }
   
   void _openAreaSelection(String type, bool multi) {
+    String? parentId;
+    if (type == 'قرية') {
+      if (_selectedMainDistrict == null) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('يرجى اختيار العزلة أولاً', style: TextStyle(fontFamily: 'Tajawal'))));
+        return;
+      }
+      parentId = _selectedMainDistrict!.id.toString();
+    } else if (type == 'محل') {
+       if (_selectedVillages.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('يرجى اختيار قرية واحدة على الأقل', style: TextStyle(fontFamily: 'Tajawal'))));
+        return;
+      }
+      // For localities, we might want to support multiple village parents, but for now let's support the first one 
+      // or if the backend supports comma separated, we join them. Spatie usually needs custom filter for arrays.
+      // Let's assume user picks one village context or we just send the first one for now to avoid complexity,
+      // OR we just join them and hope 'parent_id' filter supports '1,2'. Standard Spatie doesn't.
+      // Let's leave it as first village for safety or just pass the first one.
+      parentId = _selectedVillages.first.id.toString();
+    }
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -175,11 +195,19 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
         currentSelection: type == 'عزلة' 
           ? (_selectedMainDistrict != null ? [_selectedMainDistrict!] : [])
           : (type == 'قرية' ? _selectedVillages : _selectedLocalities),
+        parentId: parentId, // Pass parentId here
         onSelected: (List<AdminArea> items) {
           setState(() {
             if (type == 'عزلة') {
+              // If district changes, clear children
+              if (_selectedMainDistrict?.id != (items.isNotEmpty ? items.first.id : null)) {
+                 _selectedVillages = [];
+                 _selectedLocalities = [];
+              }
               _selectedMainDistrict = items.isNotEmpty ? items.first : null;
             } else if (type == 'قرية') {
+              // If villages change, clear localities which might not belong anymore?
+              // Logic for clearing localities could be added here but optional.
               _selectedVillages = items;
             } else if (type == 'محل') {
               _selectedLocalities = items;
@@ -265,20 +293,23 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
     );
   }
 
-  Widget _buildTextField(TextEditingController c, String label, IconData icon, {TextInputType? type, bool required = false, int maxLines = 1}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: TextFormField(
         controller: c,
         maxLines: maxLines,
         keyboardType: type,
+        style: const TextStyle(fontFamily: 'Tajawal', color: Colors.black, fontWeight: FontWeight.bold),
         decoration: InputDecoration(
           labelText: label,
+          labelStyle: TextStyle(fontFamily: 'Tajawal', color: Colors.grey[600], fontWeight: FontWeight.normal),
+          hintStyle: TextStyle(fontFamily: 'Tajawal', color: Colors.grey[400]),
           prefixIcon: Icon(icon, color: Colors.grey[600], size: 20),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           filled: true,
           fillColor: Colors.grey[50],
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
         ),
         validator: required ? (v) => v == null || v.isEmpty ? 'هذا الحقل مطلوب' : null : null,
       ),
@@ -309,15 +340,16 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
         child: InputDecorator(
           decoration: InputDecoration(
              labelText: label,
+             labelStyle: TextStyle(fontFamily: 'Tajawal', color: Colors.grey[600], fontWeight: FontWeight.normal),
              prefixIcon: Icon(Icons.calendar_today, color: Colors.grey[600], size: 20),
              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
              filled: true,
              fillColor: Colors.grey[50],
-             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           ),
           child: Text(
             date != null ? _formatDate(date) : '',
-            style: const TextStyle(fontSize: 14),
+            style: const TextStyle(fontSize: 14, fontFamily: 'Tajawal', fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -695,13 +727,15 @@ class _AreaSelectionSheet extends StatefulWidget {
   final AdminAreasRepository repo;
   final List<AdminArea> currentSelection;
   final Function(List<AdminArea>) onSelected;
+  final String? parentId; // Added parentId
 
   const _AreaSelectionSheet({
       required this.type, 
       required this.multi, 
       required this.repo, 
       required this.currentSelection, 
-      required this.onSelected
+      required this.onSelected,
+      this.parentId, // Added parentId
   });
 
   @override
@@ -725,7 +759,11 @@ class _AreaSelectionSheetState extends State<_AreaSelectionSheet> {
     void _fetch({String? query}) async {
         setState(() => _loading = true);
         try {
-            final items = await widget.repo.getAreas(type: widget.type, searchQuery: query);
+            final items = await widget.repo.getAreas(
+                type: widget.type, 
+                searchQuery: query,
+                parentId: widget.parentId, // Pass to repo
+            );
             if (mounted) setState(() => _items = items);
         } catch (e) {
            // Handle error

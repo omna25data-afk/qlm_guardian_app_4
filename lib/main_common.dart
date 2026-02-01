@@ -15,7 +15,7 @@ import 'package:guardian_app/features/admin/data/repositories/admin_dashboard_re
 import 'package:guardian_app/providers/admin_dashboard_provider.dart';
 import 'package:guardian_app/features/admin/data/repositories/admin_guardian_repository.dart';
 import 'package:guardian_app/providers/admin_guardians_provider.dart';
-import 'package:guardian_app/features/admin/data/repositories/admin_renewals_repository.dart';
+
 import 'package:guardian_app/providers/admin_renewals_provider.dart';
 import 'package:guardian_app/features/admin/data/repositories/admin_areas_repository.dart';
 import 'package:guardian_app/providers/admin_areas_provider.dart';
@@ -93,8 +93,8 @@ class MyApp extends StatelessWidget {
           ),
         ),
         ChangeNotifierProvider(
-          create: (_) => AdminRenewalsProvider(
-            AdminRenewalsRepository(authRepository),
+          create: (context) => AdminRenewalsProvider(
+            Provider.of<AdminGuardianRepository>(context, listen: false),
           ),
         ),
         ChangeNotifierProvider(
