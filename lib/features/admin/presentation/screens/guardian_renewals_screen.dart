@@ -32,8 +32,10 @@ class _GuardianRenewalsScreenState extends State<GuardianRenewalsScreen> with Si
     // Re-fetch guardian to ensure we have latest renewals if needed, 
     // but typically we pass the latest guardian.
     // Ideally, we might want to listen to provider here if guardian updates.
-    final guardianProvider = Provider.of<AdminGuardianProvider>(context);
-    final currentGuardian = guardianProvider.guardian ?? widget.guardian;
+    // We use the passed guardian for now as AdminGuardianProvider is not available/renamed.
+    // If live updates are needed, we should listen to AdminRenewalsProvider if it holds the guardian state.
+    // For now, simple fallback.
+    final currentGuardian = widget.guardian;
 
     return Scaffold(
       appBar: AppBar(
@@ -109,7 +111,7 @@ class _GuardianRenewalsScreenState extends State<GuardianRenewalsScreen> with Si
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2)),
         ],
         border: Border.all(color: Colors.grey[200]!),
       ),
@@ -126,7 +128,7 @@ class _GuardianRenewalsScreenState extends State<GuardianRenewalsScreen> with Si
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: isLicense ? Colors.blue.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
+                        color: isLicense ? Colors.blue.withValues(alpha: 0.1) : Colors.orange.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -151,7 +153,7 @@ class _GuardianRenewalsScreenState extends State<GuardianRenewalsScreen> with Si
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.1),
+                    color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: const Text('مكتمل', style: TextStyle(fontFamily: 'Tajawal', color: Colors.green, fontSize: 12)),

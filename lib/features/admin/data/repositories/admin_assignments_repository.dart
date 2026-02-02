@@ -51,6 +51,10 @@ class AdminAssignmentsRepository {
     } catch (e) {
       throw Exception('Error fetching assignments: $e');
     }
+
+    }
+  }
+
   Future<void> createAssignment(Map<String, dynamic> data) async {
     final token = await _storage.read(key: 'auth_token');
     final uri = Uri.parse('$baseUrl/admin/assignments');
@@ -70,5 +74,5 @@ class AdminAssignmentsRepository {
     }
   }
 }
-}
+
 

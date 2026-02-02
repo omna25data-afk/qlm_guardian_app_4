@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 // import 'package:guardian_app/core/utils/validators.dart';
 import 'package:guardian_app/features/admin/data/models/admin_guardian_model.dart';
 import 'package:guardian_app/providers/admin_renewals_provider.dart';
 
-import 'package:intl/intl.dart';
-import 'package:guardian_app/providers/admin_renewals_provider.dart';
+
 
 class RenewLicenseSheet extends StatefulWidget {
   final AdminGuardian guardian;
@@ -79,9 +77,9 @@ class _RenewLicenseSheetState extends State<RenewLicenseSheet> {
           .submitLicenseRenewal(widget.guardian.id, data);
 
       // Refresh Guardian Details to show updated info
-      if (mounted) {
-         await Provider.of<AdminGuardianProvider>(context, listen: false)
-          .fetchGuardianDetails(widget.guardian.id);
+       if (mounted) {
+         // await Provider.of<AdminGuardianProvider>(context, listen: false)
+         //  .fetchGuardianDetails(widget.guardian.id);
       }
 
       if (mounted) {
@@ -276,8 +274,8 @@ class _RenewCardSheetState extends State<RenewCardSheet> {
 
       // Refresh Guardian Details
       if (mounted) {
-         await Provider.of<AdminGuardianProvider>(context, listen: false)
-          .fetchGuardianDetails(widget.guardian.id);
+         // await Provider.of<AdminGuardianProvider>(context, listen: false)
+         //  .fetchGuardianDetails(widget.guardian.id);
       }
 
       if (mounted) {

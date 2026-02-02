@@ -296,6 +296,22 @@ class GuardianDetailsScreen extends StatelessWidget {
     );
   }
 
-  Color _parseStatusColor(Color color) => color;
+  Color _parseStatusColor(dynamic color) {
+    if (color is Color) return color;
+    if (color is String) {
+      if (color.startsWith('#')) {
+        return Color(int.parse(color.substring(1), radix: 16) + 0xFF000000);
+      }
+      switch (color.toLowerCase()) {
+        case 'green': return Colors.green;
+        case 'red': return Colors.red;
+        case 'orange': return Colors.orange;
+        case 'blue': return Colors.blue;
+        case 'grey': return Colors.grey;
+        default: return Colors.black;
+      }
+    }
+    return Colors.black;
+  }
 }
 
