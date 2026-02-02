@@ -229,4 +229,20 @@ class AdminGuardian {
       default: return Colors.grey;
     }
   }
+  // --- Remaining Days Helpers ---
+
+  int? get identityRemainingDays => _getRemainingDays(expiryDate);
+  int? get licenseRemainingDays => _getRemainingDays(licenseExpiryDate);
+  int? get cardRemainingDays => _getRemainingDays(professionCardExpiryDate);
+
+  int? _getRemainingDays(String? dateStr) {
+    if (dateStr == null) return null;
+    try {
+      final dt = DateTime.parse(dateStr);
+      final now = DateTime.now();
+      return dt.difference(now).inDays;
+    } catch (e) {
+      return null;
+    }
+  }
 }

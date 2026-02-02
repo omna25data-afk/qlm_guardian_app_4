@@ -385,17 +385,20 @@ class _GuardiansListTabState extends State<GuardiansListTab> with SingleTickerPr
                 // Smart Circles
                 _buildSmartCircle(
                     title: 'الهوية', 
-                    color: guardian.identityStatusColor
+                    color: guardian.identityStatusColor,
+                    remainingDays: guardian.identityRemainingDays
                 ),
                 const SizedBox(width: 8),
                 _buildSmartCircle(
                     title: 'الترخيص', 
-                    color: guardian.licenseStatusColor
+                    color: guardian.licenseStatusColor,
+                    remainingDays: guardian.licenseRemainingDays
                 ),
                 const SizedBox(width: 8),
                 _buildSmartCircle(
                     title: 'البطاقة', 
-                    color: guardian.cardStatusColor
+                    color: guardian.cardStatusColor,
+                    remainingDays: guardian.cardRemainingDays
                 ),
               ],
             ),
@@ -483,22 +486,33 @@ class _GuardiansListTabState extends State<GuardiansListTab> with SingleTickerPr
      );
   }
 
-  Widget _buildSmartCircle({required String title, required Color color}) {
+  Widget _buildSmartCircle({required String title, required Color color, int? remainingDays}) {
      return Column(
        children: [
          Container(
            width: 36,
            height: 36,
+           alignment: Alignment.center,
            decoration: BoxDecoration(
              shape: BoxShape.circle,
              color: color.withValues(alpha: 0.1),
              border: Border.all(color: color, width: 2),
            ),
-           child: Icon(
-             color == Colors.green ? Icons.check : (color == Colors.orange ? Icons.priority_high : Icons.close),
-             color: color,
-             size: 20,
-           ),
+           child: remainingDays != null
+               ? Text(
+                   '$remainingDays',
+                   style: TextStyle(
+                     color: color, 
+                     fontWeight: FontWeight.bold, 
+                     fontSize: remainingDays.abs() > 99 ? 10 : 12,
+                     fontFamily: 'Tajawal'
+                   ),
+                 )
+               : Icon(
+                   color == Colors.green ? Icons.check : (color == Colors.orange ? Icons.priority_high : Icons.close),
+                   color: color,
+                   size: 20,
+                 ),
          ),
          const SizedBox(height: 4),
          Text(title, style: const TextStyle(fontSize: 10, fontFamily: 'Tajawal', color: Colors.grey)),
