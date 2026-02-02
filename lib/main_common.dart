@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:guardian_app/core/config/app_config.dart';
 import 'package:guardian_app/core/constants/api_constants.dart';
@@ -111,6 +112,15 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: config.appName, // Use dynamic App Name
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('ar', 'SA'),
+        ],
+        locale: const Locale('ar', 'SA'),
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
             seedColor: const Color(0xFF006400),

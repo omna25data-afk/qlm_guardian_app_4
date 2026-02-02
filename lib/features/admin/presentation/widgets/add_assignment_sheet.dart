@@ -86,6 +86,7 @@ class _AddAssignmentSheetState extends State<AddAssignmentSheet> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2030),
+      locale: const Locale('ar', 'SA'),
     );
     if (date != null) {
       controller.text = DateFormat('yyyy-MM-dd').format(date);

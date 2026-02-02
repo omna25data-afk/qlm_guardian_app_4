@@ -50,6 +50,7 @@ class _RenewLicenseSheetState extends State<RenewLicenseSheet> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
+      locale: const Locale('ar', 'SA'),
     );
     if (picked != null) {
       setState(() {
@@ -246,6 +247,7 @@ class _RenewCardSheetState extends State<RenewCardSheet> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
+      locale: const Locale('ar', 'SA'),
     );
     if (picked != null) {
       setState(() {

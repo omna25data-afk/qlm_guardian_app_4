@@ -327,6 +327,7 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
              initialDate: date ?? DateTime.now(), 
              firstDate: DateTime(1900), 
              lastDate: DateTime(2100),
+             locale: const Locale('ar', 'SA'),
              builder: (context, child) {
                return Theme(
                  data: ThemeData.light().copyWith(
