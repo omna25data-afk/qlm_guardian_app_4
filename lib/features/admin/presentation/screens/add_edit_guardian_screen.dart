@@ -100,8 +100,12 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
     _proofType = g.proofType ?? 'بطاقة شخصية';
     _proofNumberController.text = g.proofNumber ?? '';
     _issuingAuthorityController.text = g.issuingAuthority ?? '';
-    if (g.issueDate != null) _issueDate = DateTime.tryParse(g.issueDate!);
-    if (g.expiryDate != null) _expiryDate = DateTime.tryParse(g.expiryDate!);
+    if (g.issueDate != null) {
+      _issueDate = DateTime.tryParse(g.issueDate!);
+    }
+    if (g.expiryDate != null) {
+      _expiryDate = DateTime.tryParse(g.expiryDate!);
+    }
 
     _qualificationController.text = g.qualification ?? '';
     _jobController.text = g.job ?? '';
@@ -109,17 +113,29 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
     _experienceNotesController.text = g.experienceNotes ?? '';
 
     _ministerialNumController.text = g.ministerialDecisionNumber ?? '';
-    if (g.ministerialDecisionDate != null) _ministerialDate = DateTime.tryParse(g.ministerialDecisionDate!);
+    if (g.ministerialDecisionDate != null) {
+      _ministerialDate = DateTime.tryParse(g.ministerialDecisionDate!);
+    }
     _licenseNumController.text = g.licenseNumber ?? '';
-    if (g.licenseIssueDate != null) _licenseIssueDate = DateTime.tryParse(g.licenseIssueDate!);
-    if (g.licenseExpiryDate != null) _licenseExpiryDate = DateTime.tryParse(g.licenseExpiryDate!);
+    if (g.licenseIssueDate != null) {
+      _licenseIssueDate = DateTime.tryParse(g.licenseIssueDate!);
+    }
+    if (g.licenseExpiryDate != null) {
+      _licenseExpiryDate = DateTime.tryParse(g.licenseExpiryDate!);
+    }
 
     _cardNumController.text = g.professionCardNumber ?? '';
-    if (g.professionCardIssueDate != null) _cardIssueDate = DateTime.tryParse(g.professionCardIssueDate!);
-    if (g.professionCardExpiryDate != null) _cardExpiryDate = DateTime.tryParse(g.professionCardExpiryDate!);
+    if (g.professionCardIssueDate != null) {
+      _cardIssueDate = DateTime.tryParse(g.professionCardIssueDate!);
+    }
+    if (g.professionCardExpiryDate != null) {
+      _cardExpiryDate = DateTime.tryParse(g.professionCardExpiryDate!);
+    }
 
     _employmentStatus = g.employmentStatus ?? 'على رأس العمل';
-    if (g.stopDate != null) _stopDate = DateTime.tryParse(g.stopDate!);
+    if (g.stopDate != null) {
+      _stopDate = DateTime.tryParse(g.stopDate!);
+    }
     _stopReasonController.text = g.stopReason ?? '';
     _notesController.text = g.notes ?? '';
   }
@@ -247,19 +263,43 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
             'notes': _notesController.text,
         };
 
-        if (_birthDate != null) data['birth_date'] = _formatDate(_birthDate!);
-        if (_issueDate != null) data['issue_date'] = _formatDate(_issueDate!);
-        if (_expiryDate != null) data['expiry_date'] = _formatDate(_expiryDate!);
-        if (_ministerialDate != null) data['ministerial_decision_date'] = _formatDate(_ministerialDate!);
-        if (_licenseIssueDate != null) data['license_issue_date'] = _formatDate(_licenseIssueDate!);
-        if (_licenseExpiryDate != null) data['license_expiry_date'] = _formatDate(_licenseExpiryDate!);
-        if (_cardIssueDate != null) data['profession_card_issue_date'] = _formatDate(_cardIssueDate!);
-        if (_cardExpiryDate != null) data['profession_card_expiry_date'] = _formatDate(_cardExpiryDate!);
-        if (_stopDate != null) data['stop_date'] = _formatDate(_stopDate!);
+        if (_birthDate != null) {
+          data['birth_date'] = _formatDate(_birthDate!);
+        }
+        if (_issueDate != null) {
+          data['issue_date'] = _formatDate(_issueDate!);
+        }
+        if (_expiryDate != null) {
+          data['expiry_date'] = _formatDate(_expiryDate!);
+        }
+        if (_ministerialDate != null) {
+          data['ministerial_decision_date'] = _formatDate(_ministerialDate!);
+        }
+        if (_licenseIssueDate != null) {
+          data['license_issue_date'] = _formatDate(_licenseIssueDate!);
+        }
+        if (_licenseExpiryDate != null) {
+          data['license_expiry_date'] = _formatDate(_licenseExpiryDate!);
+        }
+        if (_cardIssueDate != null) {
+          data['profession_card_issue_date'] = _formatDate(_cardIssueDate!);
+        }
+        if (_cardExpiryDate != null) {
+          data['profession_card_expiry_date'] = _formatDate(_cardExpiryDate!);
+        }
+        if (_stopDate != null) {
+          data['stop_date'] = _formatDate(_stopDate!);
+        }
 
-        if (_selectedMainDistrict != null) data['main_district_id'] = _selectedMainDistrict!.id.toString();
-        if (_selectedVillages.isNotEmpty) data['village_ids'] = _selectedVillages.map((e) => e.id).toList();
-        if (_selectedLocalities.isNotEmpty) data['locality_ids'] = _selectedLocalities.map((e) => e.id).toList();
+        if (_selectedMainDistrict != null) {
+          data['main_district_id'] = _selectedMainDistrict!.id.toString();
+        }
+        if (_selectedVillages.isNotEmpty) {
+          data['village_ids'] = _selectedVillages.map((e) => e.id).toList();
+        }
+        if (_selectedLocalities.isNotEmpty) {
+          data['locality_ids'] = _selectedLocalities.map((e) => e.id).toList();
+        }
         
         if (widget.guardian == null) {
             await repo.createGuardian(data, imagePath: _selectedImage?.path);
@@ -272,9 +312,13 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
             Navigator.pop(context, true);
         }
     } catch (e) {
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('خطأ: $e', style: const TextStyle(fontFamily: 'Tajawal')), backgroundColor: Colors.red));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('خطأ: $e', style: const TextStyle(fontFamily: 'Tajawal')), backgroundColor: Colors.red));
+        }
     } finally {
-        if (mounted) setState(() => _isLoading = false);
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
     }
   }
 

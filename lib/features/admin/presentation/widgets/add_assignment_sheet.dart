@@ -181,7 +181,9 @@ class _AddAssignmentSheetState extends State<AddAssignmentSheet> {
                    // Autocomplete expects synchronous return or simple iterable. 
                    // Better to use a simpler approach or custom typeahead.
                    // For now, let's use the options populated by state.
-                   if (textEditingValue.text.isEmpty) return const Iterable<AdminGuardian>.empty();
+                   if (textEditingValue.text.isEmpty) {
+                     return const Iterable<AdminGuardian>.empty();
+                   }
                    return _guardianOptions.where((option) => option.name.contains(textEditingValue.text));
                  },
                  displayStringForOption: (option) => option.name,
@@ -236,7 +238,9 @@ class _AddAssignmentSheetState extends State<AddAssignmentSheet> {
                Autocomplete<AdminArea>(
                  optionsBuilder: (textEditingValue) {
                    _searchAreas(textEditingValue.text);
-                   if (textEditingValue.text.isEmpty) return const Iterable<AdminArea>.empty();
+                   if (textEditingValue.text.isEmpty) {
+                     return const Iterable<AdminArea>.empty();
+                   }
                    return _areaOptions.where((option) => option.name.contains(textEditingValue.text));
                  },
                  displayStringForOption: (option) => option.name,

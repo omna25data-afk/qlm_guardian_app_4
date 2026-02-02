@@ -64,17 +64,31 @@ class RegistryEntry {
 
   Color? _mapColor(String? colorStr) {
     if (colorStr == null) return null;
-    if (colorStr == 'success' || colorStr == 'green') return Colors.green;
-    if (colorStr == 'warning' || colorStr == 'amber' || colorStr == 'orange') return Colors.orange;
-    if (colorStr == 'danger' || colorStr == 'red') return Colors.red;
-    if (colorStr == 'info' || colorStr == 'blue') return Colors.blue;
-    if (colorStr == 'gray') return Colors.grey;
+    if (colorStr == 'success' || colorStr == 'green') {
+      return Colors.green;
+    }
+    if (colorStr == 'warning' || colorStr == 'amber' || colorStr == 'orange') {
+      return Colors.orange;
+    }
+    if (colorStr == 'danger' || colorStr == 'red') {
+      return Colors.red;
+    }
+    if (colorStr == 'info' || colorStr == 'blue') {
+      return Colors.blue;
+    }
+    if (colorStr == 'gray') {
+      return Colors.grey;
+    }
     return null;
   }
 
   Color? _mapColorByLabel(String label) {
-    if (label.contains('مسودة') || label.contains('Draft')) return Colors.orange;
-    if (label.contains('معتمد') || label.contains('Approved')) return Colors.green;
+    if (label.contains('مسودة') || label.contains('Draft')) {
+      return Colors.orange;
+    }
+    if (label.contains('معتمد') || label.contains('Approved')) {
+      return Colors.green;
+    }
     return null;
   }
 }

@@ -472,13 +472,27 @@ class _RecordBooksListState extends State<RecordBooksList> {
            final typeId = book.contractTypeId; 
            if (typeId == null) return 'أخرى';
 
-           if (typeId == SystemConstants.CONTRACT_TYPE_MARRIAGE) return 'سجلات الزواج';
-           if (typeId == SystemConstants.CONTRACT_TYPE_DIVORCE) return 'سجلات الطلاق';
-           if (typeId == SystemConstants.CONTRACT_TYPE_RECONCILIATION) return 'سجلات الرجعة';
-           if (typeId == SystemConstants.CONTRACT_TYPE_AGENCY) return 'سجلات الوكالات';
-           if (typeId == SystemConstants.CONTRACT_TYPE_DISPOSITION) return 'سجلات التصرفات';
-           if (typeId == SystemConstants.CONTRACT_TYPE_DIVISION) return 'سجلات القسمة';
-           if (SystemConstants.SALES_TYPES.contains(typeId)) return 'سجلات المبيع';
+           if (typeId == SystemConstants.CONTRACT_TYPE_MARRIAGE) {
+             return 'سجلات الزواج';
+           }
+           if (typeId == SystemConstants.CONTRACT_TYPE_DIVORCE) {
+             return 'سجلات الطلاق';
+           }
+           if (typeId == SystemConstants.CONTRACT_TYPE_RECONCILIATION) {
+             return 'سجلات الرجعة';
+           }
+           if (typeId == SystemConstants.CONTRACT_TYPE_AGENCY) {
+             return 'سجلات الوكالات';
+           }
+           if (typeId == SystemConstants.CONTRACT_TYPE_DISPOSITION) {
+             return 'سجلات التصرفات';
+           }
+           if (typeId == SystemConstants.CONTRACT_TYPE_DIVISION) {
+             return 'سجلات القسمة';
+           }
+           if (SystemConstants.SALES_TYPES.contains(typeId)) {
+             return 'سجلات المبيع';
+           }
            
            return 'أخرى';
         }
@@ -682,15 +696,27 @@ class _RecordBooksListState extends State<RecordBooksList> {
   }
 
   IconData _getCategoryIcon(String title) {
-    if (title.contains('زواج')) return Icons.favorite;
-    if (title.contains('طلاق')) return Icons.heart_broken;
-    if (title.contains('وكالات')) return Icons.handshake;
-    if (title.contains('مبيع')) return Icons.store;
+    if (title.contains('زواج')) {
+      return Icons.favorite;
+    }
+    if (title.contains('طلاق')) {
+      return Icons.heart_broken;
+    }
+    if (title.contains('وكالات')) {
+      return Icons.handshake;
+    }
+    if (title.contains('مبيع')) {
+      return Icons.store;
+    }
     if (title.contains('تركة') || title.contains('قسمة')) {
       return Icons.pie_chart;
     }
-    if (title.contains('تصرفات')) return Icons.gavel;
-    if (title.contains('رجعة')) return Icons.replay;
+    if (title.contains('تصرفات')) {
+      return Icons.gavel;
+    }
+    if (title.contains('رجعة')) {
+      return Icons.replay;
+    }
     return Icons.menu_book;
   }
 

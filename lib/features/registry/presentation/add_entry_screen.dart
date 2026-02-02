@@ -85,14 +85,30 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
   }
 
   IconData _getContractIcon(String typeName) {
-    if (typeName.contains('زواج')) return Icons.favorite;
-    if (typeName.contains('طلاق') || typeName.contains('خلع') || typeName.contains('فسخ')) return Icons.heart_broken;
-    if (typeName.contains('رجعة')) return Icons.replay;
-    if (typeName.contains('مبيع')) return Icons.store;
-    if (typeName.contains('وكالة')) return Icons.handshake;
-    if (typeName.contains('تصرفات') || typeName.contains('تنازل')) return Icons.gavel;
-    if (typeName.contains('تركة') || typeName.contains('قسمة')) return Icons.pie_chart;
-    if (typeName.contains('صلح')) return Icons.handshake; 
+    if (typeName.contains('زواج')) {
+      return Icons.favorite;
+    }
+    if (typeName.contains('طلاق') || typeName.contains('خلع') || typeName.contains('فسخ')) {
+      return Icons.heart_broken;
+    }
+    if (typeName.contains('رجعة')) {
+      return Icons.replay;
+    }
+    if (typeName.contains('مبيع')) {
+      return Icons.store;
+    }
+    if (typeName.contains('وكالة')) {
+      return Icons.handshake;
+    }
+    if (typeName.contains('تصرفات') || typeName.contains('تنازل')) {
+      return Icons.gavel;
+    }
+    if (typeName.contains('تركة') || typeName.contains('قسمة')) {
+      return Icons.pie_chart;
+    }
+    if (typeName.contains('صلح')) {
+      return Icons.handshake; 
+    } 
     return Icons.description;
   }
 

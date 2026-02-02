@@ -90,9 +90,15 @@ class RecordBook {
 
   Color get statusColor {
     // Basic logic mapping status text to color
-    if (statusLabel.contains('نشط') || statusLabel.contains('Active')) return Colors.green;
-    if (statusLabel.contains('مكتمل') || statusLabel.contains('Full')) return Colors.blue;
-    if (statusLabel.contains('ملغى') || statusLabel.contains('Cancelled')) return Colors.red;
+    if (statusLabel.contains('نشط') || statusLabel.contains('Active')) {
+      return Colors.green;
+    }
+    if (statusLabel.contains('مكتمل') || statusLabel.contains('Full')) {
+      return Colors.blue;
+    }
+    if (statusLabel.contains('ملغى') || statusLabel.contains('Cancelled')) {
+      return Colors.red;
+    }
     return Colors.grey;
   }
 }
