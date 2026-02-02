@@ -783,7 +783,7 @@ class _AreaSelectionSheetState extends State<_AreaSelectionSheet> {
        return Padding(
          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
          child: Container(
-            height: MediaQuery.of(context).size.height * 0.85,
+            height: 500, // Fixed height instead of percentage to avoid full screen issues
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [

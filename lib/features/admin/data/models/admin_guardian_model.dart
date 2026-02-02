@@ -184,6 +184,13 @@ class AdminGuardian {
     }
   }
 
+  String get shortName {
+    if (firstName != null && fatherName != null && familyName != null) {
+      return "$firstName $fatherName $familyName";
+    }
+    return name;
+  }
+
   // --- Status Helpers ---
 
   Color get identityStatusColor {
