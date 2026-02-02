@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:guardian_app/features/admin/data/models/admin_guardian_model.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:guardian_app/features/admin/presentation/widgets/renewal_forms.dart';
+import 'package:guardian_app/features/admin/presentation/screens/guardian_renewals_screen.dart';
 
 class GuardianDetailsScreen extends StatelessWidget {
   final AdminGuardian guardian;
@@ -17,6 +19,13 @@ class GuardianDetailsScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            tooltip: 'سجل التجديدات',
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => GuardianRenewalsScreen(guardian: guardian))),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -63,13 +72,17 @@ class GuardianDetailsScreen extends StatelessWidget {
                  _buildGridItem(context, 'جهة العمل', guardian.workplace),
                  if (guardian.experienceNotes?.isNotEmpty == true) _buildGridItem(context, 'ملاحظات الخبرة', guardian.experienceNotes, isFullWidth: true),
                  
-                 _buildSectionDivider(context, 'الترخيص'),
+                 _buildSectionDivider(context, 'الترخيص', onRenew: () {
+                    showModalBottomSheet(context: context, isScrollControlled: true, builder: (_) => RenewLicenseSheet(guardian: guardian));
+                 }),
                  _buildGridItem(context, 'رقم القرار', guardian.ministerialDecisionNumber),
                  _buildGridItem(context, 'تاريخ القرار', guardian.ministerialDecisionDate),
                  _buildGridItem(context, 'رقم الترخيص', guardian.licenseNumber, isCopyable: true),
                  _buildGridItem(context, 'تاريخ انتهائه', guardian.licenseExpiryDate, color: guardian.licenseStatusColor, makeBold: true),
                  
-                 _buildSectionDivider(context, 'بطاقة المهنة'),
+                 _buildSectionDivider(context, 'بطاقة المهنة', onRenew: () {
+                    showModalBottomSheet(context: context, isScrollControlled: true, builder: (_) => RenewCardSheet(guardian: guardian));
+                 }),
                  _buildGridItem(context, 'رقم البطاقة', guardian.professionCardNumber, isCopyable: true),
                  _buildGridItem(context, 'تاريخ انتهائها', guardian.professionCardExpiryDate, color: guardian.cardStatusColor, makeBold: true),
                ]
@@ -209,11 +222,27 @@ class GuardianDetailsScreen extends StatelessWidget {
      );
   }
 
-  Widget _buildSectionDivider(BuildContext context, String label) {
+  Widget _buildSectionDivider(BuildContext context, String label, {VoidCallback? onRenew}) {
      return Container(
        width: double.infinity,
        padding: const EdgeInsets.symmetric(vertical: 8),
-       child: Text(label, style: TextStyle(fontFamily: 'Tajawal', fontWeight: FontWeight.bold, fontSize: 14, color: Theme.of(context).primaryColor)),
+       child: Row(
+         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+         children: [
+           Text(label, style: TextStyle(fontFamily: 'Tajawal', fontWeight: FontWeight.bold, fontSize: 14, color: Theme.of(context).primaryColor)),
+           if (onRenew != null)
+             TextButton.icon(
+              onPressed: onRenew,
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.compact,
+              ),
+              icon: const Icon(Icons.refresh, size: 16),
+              label: const Text('تجديد', style: TextStyle(fontFamily: 'Tajawal', fontSize: 12)),
+             )
+         ],
+       ),
      );
   }
 

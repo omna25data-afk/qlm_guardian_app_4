@@ -135,4 +135,43 @@ class AdminGuardianRepository {
       throw Exception('Failed to delete guardian');
     }
   }
+
+  Future<void> renewLicense(int guardianId, Map<String, dynamic> data) async {
+    final token = await _authRepository.getToken();
+    final uri = Uri.parse('${ApiConstants.baseUrl}/admin/guardians/$guardianId/renew-license');
+
+    final response = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      throw Exception('Failed to renew license: ${response.body}');
+    }
+  }
+
+  Future<void> renewCard(int guardianId, Map<String, dynamic> data) async {
+    final token = await _authRepository.getToken();
+    final uri = Uri.parse('${ApiConstants.baseUrl}/admin/guardians/$guardianId/renew-card');
+
+    final response = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      throw Exception('Failed to renew card: ${response.body}');
+    }
+  }
 }
+

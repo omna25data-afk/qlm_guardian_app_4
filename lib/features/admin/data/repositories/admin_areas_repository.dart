@@ -54,4 +54,23 @@ class AdminAreasRepository {
   Future<List<AdminArea>> getDistricts({String? query}) => getAreas(searchQuery: query, type: 'عزلة');
   Future<List<AdminArea>> getVillages({String? query, String? parentId}) => getAreas(searchQuery: query, type: 'قرية', parentId: parentId);
   Future<List<AdminArea>> getLocalities({String? query, String? parentId}) => getAreas(searchQuery: query, type: 'محل', parentId: parentId);
+  Future<void> createArea(Map<String, dynamic> data) async {
+    final token = await _storage.read(key: 'auth_token');
+    final uri = Uri.parse('$baseUrl/admin/areas');
+
+    final response = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      throw Exception('Failed to create area: ${response.body}');
+    }
+  }
 }
+

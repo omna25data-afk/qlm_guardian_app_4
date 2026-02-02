@@ -51,5 +51,23 @@ class AdminAssignmentsRepository {
     } catch (e) {
       throw Exception('Error fetching assignments: $e');
     }
+  Future<void> createAssignment(Map<String, dynamic> data) async {
+    final token = await _storage.read(key: 'auth_token');
+    final uri = Uri.parse('$baseUrl/admin/assignments');
+
+    final response = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      throw Exception('Failed to create assignment: ${response.body}');
+    }
   }
 }
+

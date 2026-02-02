@@ -112,4 +112,24 @@ class AdminRenewalsProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+  }
+
+  Future<void> submitLicenseRenewal(int guardianId, Map<String, dynamic> data) async {
+    try {
+      await _repository.renewLicense(guardianId, data);
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> submitCardRenewal(int guardianId, Map<String, dynamic> data) async {
+    try {
+      await _repository.renewCard(guardianId, data);
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
+

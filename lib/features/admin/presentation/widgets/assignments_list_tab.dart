@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:guardian_app/features/admin/data/models/admin_assignment_model.dart';
 import 'package:guardian_app/providers/admin_assignments_provider.dart';
+import 'package:guardian_app/features/admin/presentation/widgets/add_assignment_sheet.dart';
 import 'dart:async';
 
 class AssignmentsListTab extends StatefulWidget {
@@ -45,7 +46,14 @@ class _AssignmentsListTabState extends State<AssignmentsListTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      floatingActionButton: FloatingActionButton(
+        onPressed: _openAddSheet,
+        backgroundColor: Colors.blue,
+        child: const Icon(Icons.add),
+      ),
+      body: Column(
       children: [
         // Filters & Search
         Padding(
@@ -144,7 +152,18 @@ class _AssignmentsListTabState extends State<AssignmentsListTab> {
           ),
         ),
       ],
+      ),
     );
+  }
+
+  void _openAddSheet() {
+      showModalBottomSheet(
+        context: context, 
+        isScrollControlled: true,
+        builder: (_) => AddAssignmentSheet(
+            onSuccess: _fetchData
+        )
+      );
   }
 
   Widget _buildFilterChips(BuildContext context) {
