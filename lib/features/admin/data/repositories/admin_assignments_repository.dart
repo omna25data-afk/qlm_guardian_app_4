@@ -53,7 +53,6 @@ class AdminAssignmentsRepository {
     }
 
     }
-  }
 
   Future<void> createAssignment(Map<String, dynamic> data) async {
     final token = await _storage.read(key: 'auth_token');

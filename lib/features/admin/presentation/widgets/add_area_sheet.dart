@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guardian_app/features/admin/data/models/admin_area_model.dart';
 import 'package:guardian_app/features/admin/data/repositories/admin_areas_repository.dart';
-import 'package:provider/provider.dart';
+
 
 class AddAreaSheet extends StatefulWidget {
   final AdminAreasRepository repository;
@@ -132,7 +132,7 @@ class _AddAreaSheetState extends State<AddAreaSheet> {
               const SizedBox(height: 24),
               
               DropdownButtonFormField<String>(
-                value: _selectedType,
+                initialValue: _selectedType,
                 decoration: const InputDecoration(labelText: 'نوع المنطقة'),
                 items: _types.map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
                 onChanged: _onTypeChanged,
@@ -141,7 +141,7 @@ class _AddAreaSheetState extends State<AddAreaSheet> {
 
               if (_selectedType != 'عزلة') ...[
                  DropdownButtonFormField<AdminArea>(
-                  value: _selectedParent,
+                  initialValue: _selectedParent,
                   decoration: InputDecoration(
                     labelText: _selectedType == 'قرية' ? 'تابع للعزلة' : 'تابع للقرية',
                     suffixIcon: _isLoadingParents ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)) : null,
