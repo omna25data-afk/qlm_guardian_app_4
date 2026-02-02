@@ -21,8 +21,7 @@ class _AddAssignmentSheetState extends State<AddAssignmentSheet> {
   final _startDateController = TextEditingController();
   final _endDateController = TextEditingController();
   final _notesController = TextEditingController();
-  final _guardianSearchController = TextEditingController();
-  final _areaSearchController = TextEditingController();
+
   
   String _assignmentType = 'temporary_delegation';
   AdminGuardian? _selectedGuardian;
@@ -59,7 +58,7 @@ class _AddAssignmentSheetState extends State<AddAssignmentSheet> {
     if (query.length < 2) return;
     setState(() => _isLoadingGuardians = true);
     try {
-      final results = await _guardianRepo.getGuardians(page: 1, limit: 10, search: query);
+      final results = await _guardianRepo.getGuardians(page: 1, searchQuery: query);
       setState(() => _guardianOptions = results);
     } catch (e) {
       // ignore error
@@ -163,7 +162,7 @@ class _AddAssignmentSheetState extends State<AddAssignmentSheet> {
               
               // Assignment Type
               DropdownButtonFormField<String>(
-                value: _assignmentType,
+                 initialValue: _assignmentType,
                 decoration: const InputDecoration(labelText: 'نوع التكليف'),
                 items: const [
                     DropdownMenuItem(value: 'temporary_delegation', child: Text('تكليف مؤقت')),

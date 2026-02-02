@@ -120,7 +120,7 @@ class GuardianDetailsScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24), // Soft edges
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 15, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 15, offset: const Offset(0, 4))],
       ),
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -148,7 +148,7 @@ class GuardianDetailsScreen extends StatelessWidget {
                       const SizedBox(height: 6),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(color: Colors.blue.withOpacity(0.05), borderRadius: BorderRadius.circular(8)),
+                        decoration: BoxDecoration(color: Colors.blue.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(8)),
                         child: Text('الرقم: ${guardian.serialNumber}', style: const TextStyle(fontFamily: 'Tajawal', color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 12)),
                       ),
                     ],
@@ -159,7 +159,7 @@ class GuardianDetailsScreen extends StatelessWidget {
                     onPressed: () => launchUrl(Uri.parse('tel:${guardian.phone}')),
                     icon: Container(
                       padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), shape: BoxShape.circle),
+                      decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.1), shape: BoxShape.circle),
                       child: const Icon(Icons.phone, color: Colors.green, size: 20),
                     ),
                   )
@@ -184,7 +184,7 @@ class GuardianDetailsScreen extends StatelessWidget {
       children: [
         Container(
           width: 12, height: 12,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 2), boxShadow: [BoxShadow(color: color.withOpacity(0.3), blurRadius: 6)]),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 2), boxShadow: [BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 6)]),
         ),
         const SizedBox(height: 6),
         Text(label, style: TextStyle(fontFamily: 'Tajawal', color: Colors.grey[600], fontSize: 12)),
@@ -197,8 +197,8 @@ class GuardianDetailsScreen extends StatelessWidget {
        decoration: BoxDecoration(
          color: Colors.white,
          borderRadius: BorderRadius.circular(20),
-         border: Border.all(color: Colors.grey.withOpacity(0.1)),
-         boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10)],
+         border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10)],
        ),
        padding: const EdgeInsets.all(20),
        child: Column(
@@ -276,10 +276,26 @@ class GuardianDetailsScreen extends StatelessWidget {
   // Refactoring to helper function usage correctly.
 }
 
-// ... Additional helper classes/methods to support the above structure ...
-// Re-implementing correctly:
+  Widget _buildListChips(BuildContext context, String title, List<String> items) {
+    if (items.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: TextStyle(fontFamily: 'Tajawal', color: Colors.grey[500], fontSize: 11)),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: items.map((tag) => Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(color: Colors.blue.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.blue.withValues(alpha: 0.1))),
+            child: Text(tag, style: TextStyle(color: Colors.blue[800], fontSize: 12, fontFamily: 'Tajawal')),
+          )).toList(),
+        ),
+      ],
+    );
+  }
 
-class _GuardianDetailsScreenState extends StatelessWidget { 
-  // Actually reusing the main class
+  Color _parseStatusColor(Color color) => color;
 }
 

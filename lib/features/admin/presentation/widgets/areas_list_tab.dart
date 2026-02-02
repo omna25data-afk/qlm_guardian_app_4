@@ -12,7 +12,7 @@ class AreasListTab extends StatefulWidget {
 }
 
 class _AreasListTabState extends State<AreasListTab> {
-  late AdminAreasRepository _repository;
+  // late AdminAreasRepository _repository;
   List<AdminArea> _districts = [];
   bool _isLoading = false;
   String? _error;
@@ -42,7 +42,9 @@ class _AreasListTabState extends State<AreasListTab> {
        // Better: Use AdminAreasProvider's repo if public? No, it's private.
        // Let's fix AdminAreasProvider to expose repo or just create new instance.
        // Wait, I can inject it.
-    } catch(e) {}
+    } catch(e) {
+      debugPrint('Error finding repo: $e');
+    }
   }
   
   // Workaround: We will use the Context to find the repository if provided.
@@ -193,7 +195,7 @@ class _AreaExpansionTileState extends State<_AreaExpansionTile> with AutomaticKe
       elevation: 0,
       shape: RoundedRectangleBorder(
          borderRadius: BorderRadius.circular(8),
-         side: BorderSide(color: Colors.grey.withOpacity(0.1))
+         side: BorderSide(color: Colors.grey.withValues(alpha: 0.1))
       ),
       child: ExpansionTile(
         tilePadding: EdgeInsets.only(right: 16, left: 16), // No indentation at tile level, handle content match

@@ -200,7 +200,7 @@ class _GuardiansListTabState extends State<GuardiansListTab> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+                      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
                     ),
                     child: TextField(
                       controller: _searchController,
@@ -262,7 +262,7 @@ class _GuardiansListTabState extends State<GuardiansListTab> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5)],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 5)],
       ),
       child: IconButton(
         icon: Icon(icon, color: color),
@@ -315,7 +315,7 @@ class _GuardiansListTabState extends State<GuardiansListTab> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: isActive ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2), 
+                          color: isActive ? Colors.green.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.2), 
                           width: 3
                         ),
                       ),
@@ -404,7 +404,7 @@ class _GuardiansListTabState extends State<GuardiansListTab> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                             color: Colors.blue.withOpacity(0.05),
+                             color: Colors.blue.withValues(alpha: 0.05),
                              borderRadius: BorderRadius.circular(6)
                           ),
                           child: const Row(
@@ -424,7 +424,7 @@ class _GuardiansListTabState extends State<GuardiansListTab> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                             color: Colors.green.withOpacity(0.05),
+                             color: Colors.green.withValues(alpha: 0.05),
                              borderRadius: BorderRadius.circular(6)
                           ),
                           child: const Row(

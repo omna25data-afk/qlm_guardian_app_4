@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guardian_app/features/admin/data/models/admin_guardian_model.dart';
 import 'package:provider/provider.dart';
-import 'package:guardian_app/providers/admin_guardian_provider.dart';
+import 'package:guardian_app/providers/admin_renewals_provider.dart';
 
 class GuardianRenewalsScreen extends StatefulWidget {
   final AdminGuardian guardian;
