@@ -98,7 +98,7 @@ class MyApp extends StatelessWidget {
             Provider.of<AdminGuardianRepository>(context, listen: false),
           ),
         ),
-        ),
+
         Provider<AdminAreasRepository>(
           create: (_) => AdminAreasRepository(baseUrl: config.apiBaseUrl),
         ),
