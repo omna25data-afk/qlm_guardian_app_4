@@ -43,8 +43,8 @@ class _GuardiansListTabState extends State<GuardiansListTab> {
     }
   }
 
-  void _fetchData({bool refresh = false}) {
-    Provider.of<AdminGuardiansProvider>(context, listen: false)
+  Future<void> _fetchData({bool refresh = false}) async {
+    await Provider.of<AdminGuardiansProvider>(context, listen: false)
         .fetchGuardians(refresh: refresh, status: _selectedStatus, search: _searchController.text);
   }
 
@@ -149,7 +149,7 @@ class _GuardiansListTabState extends State<GuardiansListTab> {
             if (isSelected)
               Container(
                 padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: primaryColor,
                   shape: BoxShape.circle,
                 ),

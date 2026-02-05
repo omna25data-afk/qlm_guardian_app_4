@@ -460,9 +460,9 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
               // Filter & Sort
               Row(
                 children: [
-                  Expanded(child: _buildActionChip(Icons.filter_list, 'تصفية', _hasActiveFilters, Colors.orange, _showFilterSheet)),
+                  Expanded(child: _buildActionChip(icon: Icons.filter_list, label: 'تصفية', isActive: _hasActiveFilters, activeColor: Colors.orange, onTap: _showFilterSheet)),
                   const SizedBox(width: 10),
-                  Expanded(child: _buildActionChip(Icons.sort, 'ترتيب', false, Colors.blue, _showSortSheet)),
+                  Expanded(child: _buildActionChip(icon: Icons.sort, label: 'ترتيب', isActive: false, activeColor: Colors.blue, onTap: _showSortSheet)),
                 ],
               ),
             ],
@@ -705,7 +705,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
       color = Colors.green;
     }
     
-    return Container(
+    return SizedBox(
       width: 50,
       height: 50,
       child: Stack(

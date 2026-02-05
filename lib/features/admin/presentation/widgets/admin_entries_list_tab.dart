@@ -20,7 +20,7 @@ class _AdminEntriesListTabState extends State<AdminEntriesListTab> {
 
   bool _isLoading = true;
   bool _isLoadingMore = false;
-  List<RegistryEntry> _entries = [];
+  final List<RegistryEntry> _entries = [];
   List<RegistryEntry> _filteredEntries = [];
 
   // Pagination
@@ -578,11 +578,11 @@ class _AdminEntriesListTabState extends State<AdminEntriesListTab> {
               // Action buttons
               Row(
                 children: [
-                  Expanded(child: _buildActionChip(Icons.filter_list, 'تصفية', _hasActiveFilters, Colors.orange, _showFilterSheet)),
+                  Expanded(child: _buildActionChip(icon: Icons.filter_list, label: 'تصفية', isActive: _hasActiveFilters, activeColor: Colors.orange, onTap: _showFilterSheet)),
                   const SizedBox(width: 8),
-                  Expanded(child: _buildActionChip(Icons.layers, 'تجميع', _groupBy != 'none', Colors.purple, _showGroupingSheet)),
+                  Expanded(child: _buildActionChip(icon: Icons.layers, label: 'تجميع', isActive: _groupBy != 'none', activeColor: Colors.purple, onTap: _showGroupingSheet)),
                   const SizedBox(width: 8),
-                  Expanded(child: _buildActionChip(Icons.sort, 'ترتيب', false, Colors.blue, _showSortSheet)),
+                  Expanded(child: _buildActionChip(icon: Icons.sort, label: 'ترتيب', isActive: false, activeColor: Colors.blue, onTap: _showSortSheet)),
                 ],
               ),
             ],
@@ -889,7 +889,7 @@ class _AdminEntriesListTabState extends State<AdminEntriesListTab> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.visibility_outlined, size: 14, color: primaryColor),
+                              const Icon(Icons.visibility_outlined, size: 14, color: primaryColor),
                               const SizedBox(width: 4),
                               Text('عرض', style: GoogleFonts.tajawal(fontSize: 11, fontWeight: FontWeight.bold, color: primaryColor)),
                             ],
