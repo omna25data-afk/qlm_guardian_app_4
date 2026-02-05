@@ -7,6 +7,7 @@ import 'package:guardian_app/features/admin/presentation/screens/admin_guardians
 import 'package:guardian_app/features/admin/presentation/widgets/records_tab.dart';
 import 'package:guardian_app/features/admin/presentation/widgets/reports_tab.dart';
 import 'package:guardian_app/features/admin/presentation/widgets/tools_tab.dart';
+import 'package:guardian_app/widgets/custom_dropdown_menu.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
@@ -36,12 +37,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<AuthProvider>(context).currentUser;
     final textTheme = Theme.of(context).textTheme;
+    final isWideScreen = MediaQuery.of(context).size.width > 400;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF006400),
         automaticallyImplyLeading: false, 
-        toolbarHeight: MediaQuery.of(context).size.height > 600 ? 80 : 60, // Responsive height
+        toolbarHeight: MediaQuery.of(context).size.height > 600 ? 80 : 60,
         centerTitle: false,
         title: Padding(
           padding: const EdgeInsets.only(right: 8.0),
@@ -55,7 +57,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   textStyle: textTheme.titleLarge?.copyWith(
                     color: Colors.white, 
                     fontWeight: FontWeight.bold,
-                    fontSize: MediaQuery.of(context).size.width > 400 ? 20 : 16, // Responsive font
+                    fontSize: isWideScreen ? 20 : 16,
                     height: 1.2
                   )
                 ),
@@ -65,7 +67,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 style: GoogleFonts.tajawal(
                   textStyle: textTheme.bodySmall?.copyWith(
                     color: Colors.white70,
-                    fontSize: MediaQuery.of(context).size.width > 400 ? 12 : 10
+                    fontSize: isWideScreen ? 12 : 10
                   )
                 ),
               ),
@@ -73,109 +75,244 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           ),
         ),
         actions: [
-           IconButton(
-            icon: Icon(Icons.notifications, color: Colors.white, size: MediaQuery.of(context).size.width > 400 ? 28 : 24),
+          // Notifications Button
+          _buildAppBarIconButton(
+            icon: Icons.notifications_outlined,
             onPressed: () {},
+            badge: 3,
           ),
+          const SizedBox(width: 8),
+          // Profile Menu
           Padding(
             padding: const EdgeInsets.only(left: 12.0),
-            child: PopupMenuButton<String>(
-              offset: const Offset(0, 50),
-              child: Container(
-                padding: const EdgeInsets.all(2),
+            child: CustomDropdownMenuWithHeader(
+              offset: const Offset(0, 60),
+              menuWidth: 260,
+              trigger: Container(
+                padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: CircleAvatar(
                   backgroundImage: user?.avatarUrl != null 
                       ? NetworkImage(user!.avatarUrl!) 
                       : const AssetImage('assets/images/placeholder_avatar.png') as ImageProvider,
-                  radius: MediaQuery.of(context).size.width > 400 ? 20 : 16,
+                  radius: isWideScreen ? 20 : 16,
+                  backgroundColor: Colors.grey[200],
                 ),
               ),
-              onSelected: (value) {
-                if (value == 'logout') {
-                  Provider.of<AuthProvider>(context, listen: false).logout();
-                  Navigator.of(context).pushReplacementNamed('/login');
-                }
-              },
-              itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 'profile',
-                    child: Row(
+              header: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundImage: user?.avatarUrl != null 
+                        ? NetworkImage(user!.avatarUrl!) 
+                        : const AssetImage('assets/images/placeholder_avatar.png') as ImageProvider,
+                    backgroundColor: Colors.grey[200],
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.person, color: Colors.grey[700]), 
-                        const SizedBox(width: 8), 
-                        Text('الملف الشخصي', style: GoogleFonts.tajawal(fontSize: 16))
+                        Text(
+                          user?.name ?? 'الرئيس',
+                          style: GoogleFonts.tajawal(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.black87,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF006400),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            'رئيس القلم',
+                            style: GoogleFonts.tajawal(
+                              fontSize: 10,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  PopupMenuItem(
-                    value: 'settings',
-                    child: Row(
-                      children: [
-                        Icon(Icons.settings, color: Colors.grey[700]), 
-                        const SizedBox(width: 8), 
-                        Text('الإعدادات', style: GoogleFonts.tajawal(fontSize: 16))
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: 'dark_mode',
-                    child: Row(
-                      children: [
-                        Icon(Icons.nightlight_round, color: Colors.grey[700]), 
-                        const SizedBox(width: 8), 
-                        Text('الوضع الليلي', style: GoogleFonts.tajawal(fontSize: 16))
-                      ],
-                    ),
-                  ),
-                  const PopupMenuDivider(),
-                  PopupMenuItem(
-                    value: 'logout',
-                    child: Row(
-                      children: [
-                        const Icon(Icons.logout, color: Colors.red), 
-                        const SizedBox(width: 8), 
-                        Text('تسجيل الخروج', style: GoogleFonts.tajawal(color: Colors.red, fontSize: 16))
-                      ],
-                    ),
-                  ),
+                ],
+              ),
+              items: [
+                CustomMenuItem(
+                  label: 'الملف الشخصي',
+                  icon: Icons.person_outline,
+                  onTap: () {
+                    // Navigate to profile
+                  },
+                ),
+                CustomMenuItem(
+                  label: 'الإعدادات',
+                  icon: Icons.settings_outlined,
+                  onTap: () {
+                    // Navigate to settings
+                  },
+                ),
+                CustomMenuItem(
+                  label: 'الوضع الليلي',
+                  icon: Icons.dark_mode_outlined,
+                  onTap: () {
+                    // Toggle dark mode
+                  },
+                ),
+                CustomMenuItem.divider(),
+                CustomMenuItem(
+                  label: 'تسجيل الخروج',
+                  icon: Icons.logout,
+                  isDestructive: true,
+                  onTap: () {
+                    Provider.of<AuthProvider>(context, listen: false).logout();
+                    Navigator.of(context).pushReplacementNamed('/login');
+                  },
+                ),
               ],
             ),
           ),
         ],
       ),
       body: _pages[_selectedIndex],
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, -5))],
-        ),
-        child: SafeArea(
-          child: BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'الرئيسية'),
-              BottomNavigationBarItem(icon: Icon(Icons.group), label: 'الأمناء'),
-              BottomNavigationBarItem(icon: Icon(Icons.source), label: 'السجلات'),
-              BottomNavigationBarItem(icon: Icon(Icons.analytics), label: 'التقارير'),
-              BottomNavigationBarItem(icon: Icon(Icons.build), label: 'الأدوات'),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: const Color(0xFF006400),
-            unselectedItemColor: Colors.grey,
-            showUnselectedLabels: true,
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.transparent, 
-            elevation: 0,
-            iconSize: MediaQuery.of(context).size.width > 400 ? 28 : 24, // Responsive icons
-            onTap: _onItemTapped,
-            selectedLabelStyle: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width > 400 ? 12 : 10),
-            unselectedLabelStyle: GoogleFonts.tajawal(fontSize: MediaQuery.of(context).size.width > 400 ? 10 : 9),
+      bottomNavigationBar: _buildBottomNavBar(isWideScreen),
+    );
+  }
+
+  Widget _buildAppBarIconButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+    int? badge,
+  }) {
+    return Stack(
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: IconButton(
+            icon: Icon(icon, color: Colors.white, size: 24),
+            onPressed: onPressed,
+            padding: const EdgeInsets.all(8),
+            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
           ),
         ),
+        if (badge != null && badge > 0)
+          Positioned(
+            right: 4,
+            top: 8,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFF006400), width: 2),
+              ),
+              constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+              child: Text(
+                badge > 9 ? '9+' : badge.toString(),
+                style: GoogleFonts.tajawal(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildBottomNavBar(bool isWideScreen) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 16,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavItem(0, Icons.dashboard_outlined, Icons.dashboard, 'الرئيسية', isWideScreen),
+              _buildNavItem(1, Icons.group_outlined, Icons.group, 'الأمناء', isWideScreen),
+              _buildNavItem(2, Icons.source_outlined, Icons.source, 'السجلات', isWideScreen),
+              _buildNavItem(3, Icons.analytics_outlined, Icons.analytics, 'التقارير', isWideScreen),
+              _buildNavItem(4, Icons.build_outlined, Icons.build, 'الأدوات', isWideScreen),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(int index, IconData icon, IconData activeIcon, String label, bool isWideScreen) {
+    final isSelected = _selectedIndex == index;
+    
+    return GestureDetector(
+      onTap: () => _onItemTapped(index),
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(
+          horizontal: isSelected ? 16 : 12,
+          vertical: 8,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected 
+              ? const Color(0xFF006400).withValues(alpha: 0.1)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isSelected ? activeIcon : icon,
+              color: isSelected ? const Color(0xFF006400) : Colors.grey,
+              size: isWideScreen ? 26 : 22,
+            ),
+            if (isSelected) ...[
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: GoogleFonts.tajawal(
+                  color: const Color(0xFF006400),
+                  fontWeight: FontWeight.bold,
+                  fontSize: isWideScreen ? 13 : 11,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

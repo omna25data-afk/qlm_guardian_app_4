@@ -18,7 +18,7 @@
       "Dart-Code.dart-code"
     ];
     workspace = {
-      # Runs when a workspace is first created with this [dev.nix](cci:7://file:///f:/herd/custom_filment/guardian_app_github/.idx/dev.nix:0:0-0:0) file
+      # Runs when a workspace is first created with this `dev.nix` file
       onCreate = {
           build-flutter = ''
             flutter create . --platforms=android,ios

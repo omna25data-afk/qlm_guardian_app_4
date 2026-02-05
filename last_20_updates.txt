@@ -1,0 +1,20 @@
+﻿2026-02-03 17:24:27 +0300 | Refactor: Separate Admin and Guardian features and folders
+2026-02-03 02:32:35 +0300 | fix: Resolve VERSION conflict and push frontend updates
+2026-02-03 02:14:56 +0300 | feat: Implement Record Books, Registry Entries, and Create Entry Wizard
+2026-02-02 22:13:34 +0000 | Deploy: New Release Build [Mon Feb  2 10:13:34 PM UTC 2026]
+2026-02-02 22:02:35 +0000 | Deploy: New Release Build [Mon Feb  2 10:02:35 PM UTC 2026]
+2026-02-02 21:57:12 +0000 | Deploy: New Release Build [Mon Feb  2 09:57:12 PM UTC 2026]
+2026-02-03 00:57:04 +0300 | Fix invalid intl version in pubspec.yaml
+2026-02-03 00:52:21 +0300 | Fix intl dependency version conflict
+2026-02-03 00:15:46 +0300 | Fix auto_release.sh zip dependency
+2026-02-02 23:52:37 +0300 | Add automated release scripts
+2026-02-02 18:06:55 +0000 | chore: Bump version to V1.1.03
+2026-02-02 17:54:06 +0000 | chore: Bump version to V1.1.02
+2026-02-02 17:26:43 +0000 | Deploy: New Release Build [Mon Feb  2 05:26:43 PM UTC 2026]
+2026-02-02 17:06:05 +0000 | Deploy: New Release Build [Mon Feb  2 05:06:05 PM UTC 2026]
+2026-02-02 19:57:52 +0300 | Implement standardized UI Theme across app
+2026-02-02 16:36:20 +0000 | Deploy: New Release Build [Mon Feb  2 04:36:20 PM UTC 2026]
+2026-02-02 06:23:22 +0300 | Upgrade intl dependency to ^0.20.2 to match flutter_localizations
+2026-02-02 03:20:21 +0000 | Deploy: New Release Build [Mon Feb  2 03:20:21 AM UTC 2026]
+2026-02-02 06:13:13 +0300 | Fix syntax error in main_common.dart (extra bracket)
+2026-02-02 06:09:26 +0300 | Merge branch 'main' of https://github.com/omna25data-afk/qlm_guardian_app # Please enter a commit message to explain why this merge is necessary, # especially if it merges an updated upstream into a topic branch. # # Lines starting with '#' will be ignored, and an empty message aborts # the commit.

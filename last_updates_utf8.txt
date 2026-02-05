@@ -1,0 +1,10 @@
+﻿2026-02-03 17:24:27 +0300 | Refactor: Separate Admin and Guardian features and folders
+2026-02-03 02:32:35 +0300 | fix: Resolve VERSION conflict and push frontend updates
+2026-02-03 02:14:56 +0300 | feat: Implement Record Books, Registry Entries, and Create Entry Wizard
+2026-02-02 22:13:34 +0000 | Deploy: New Release Build [Mon Feb  2 10:13:34 PM UTC 2026]
+2026-02-02 22:02:35 +0000 | Deploy: New Release Build [Mon Feb  2 10:02:35 PM UTC 2026]
+2026-02-02 21:57:12 +0000 | Deploy: New Release Build [Mon Feb  2 09:57:12 PM UTC 2026]
+2026-02-03 00:57:04 +0300 | Fix invalid intl version in pubspec.yaml
+2026-02-03 00:52:21 +0300 | Fix intl dependency version conflict
+2026-02-03 00:15:46 +0300 | Fix auto_release.sh zip dependency
+2026-02-02 23:52:37 +0300 | Add automated release scripts

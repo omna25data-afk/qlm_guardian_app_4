@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:guardian_app/features/admin/data/models/admin_guardian_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:guardian_app/features/admin/presentation/widgets/renew_card_sheet.dart';
@@ -7,293 +8,572 @@ import 'package:guardian_app/features/admin/presentation/screens/guardian_renewa
 
 class GuardianDetailsScreen extends StatelessWidget {
   final AdminGuardian guardian;
+  static const primaryColor = Color(0xFF006400);
 
   const GuardianDetailsScreen({super.key, required this.guardian});
 
   @override
   Widget build(BuildContext context) {
+    final bool isActive = guardian.employmentStatus == 'على رأس العمل';
+    
     return Scaffold(
-      backgroundColor: Colors.grey[50], // Soft background
-      appBar: AppBar(
-        title: const Text('ملف الأمين', style: TextStyle(fontFamily: 'Tajawal', fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.history),
-            tooltip: 'سجل التجديدات',
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => GuardianRenewalsScreen(guardian: guardian))),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            _buildHeaderCard(context),
-            const SizedBox(height: 16),
-            _buildSection(
-              context,
-              title: 'المعلومات الشخصية',
-              icon: Icons.person_outline,
-              children: [
-                _buildGridItem(context, 'الاسم الكامل', guardian.name, isFullWidth: true),
-                _buildGridItem(context, 'اسم الأب', guardian.fatherName),
-                _buildGridItem(context, 'اسم الجد', guardian.grandfatherName),
-                _buildGridItem(context, 'اللقب', guardian.familyName),
-                if (guardian.greatGrandfatherName != null) _buildGridItem(context, 'الجد الكبير', guardian.greatGrandfatherName),
-                _buildGridItem(context, 'تاريخ الميلاد', guardian.birthDate),
-                _buildGridItem(context, 'مكان الميلاد', guardian.birthPlace),
-                _buildGridItem(context, 'هاتف المنزل', guardian.homePhone),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _buildSection(
-               context,
-               title: 'الهوية والسكن',
-               icon: Icons.badge_outlined,
-               children: [
-                 _buildGridItem(context, 'نوع الإثبات', guardian.proofType),
-                 _buildGridItem(context, 'رقم الإثبات', guardian.proofNumber, isCopyable: true),
-                 _buildGridItem(context, 'جهة الإصدار', guardian.issuingAuthority),
-                 _buildGridItem(context, 'تاريخ الإصدار', guardian.issueDate),
-                 _buildGridItem(context, 'تاريخ الانتهاء', guardian.expiryDate, color: guardian.identityStatusColor, makeBold: true),
-               ]
-            ),
-            const SizedBox(height: 16),
-             _buildSection(
-               context,
-               title: 'المهنة والترخيص',
-               icon: Icons.work_outline,
-               children: [
-                 _buildGridItem(context, 'المؤهل العلمي', guardian.qualification),
-                 _buildGridItem(context, 'الوظيفة', guardian.job),
-                 _buildGridItem(context, 'جهة العمل', guardian.workplace),
-                 if (guardian.experienceNotes?.isNotEmpty == true) _buildGridItem(context, 'ملاحظات الخبرة', guardian.experienceNotes, isFullWidth: true),
-                 
-                 _buildSectionDivider(context, 'الترخيص', onRenew: () {
-                    showModalBottomSheet(context: context, isScrollControlled: true, builder: (_) => RenewLicenseSheet(guardian: guardian));
-                 }),
-                 _buildGridItem(context, 'رقم القرار', guardian.ministerialDecisionNumber),
-                 _buildGridItem(context, 'تاريخ القرار', guardian.ministerialDecisionDate),
-                 _buildGridItem(context, 'رقم الترخيص', guardian.licenseNumber, isCopyable: true),
-                 _buildGridItem(context, 'تاريخ انتهائه', guardian.licenseExpiryDate, color: guardian.licenseStatusColor, makeBold: true),
-                 
-                 _buildSectionDivider(context, 'بطاقة المهنة', onRenew: () {
-                    showModalBottomSheet(context: context, isScrollControlled: true, builder: (_) => RenewCardSheet(guardian: guardian));
-                 }),
-                 _buildGridItem(context, 'رقم البطاقة', guardian.professionCardNumber, isCopyable: true),
-                 _buildGridItem(context, 'تاريخ انتهائها', guardian.professionCardExpiryDate, color: guardian.cardStatusColor, makeBold: true),
-               ]
-            ),
-             const SizedBox(height: 16),
-             _buildSection(
-               context,
-               title: 'المواقع والملاحظات',
-               icon: Icons.map_outlined,
-               children: [
-                  if (guardian.mainDistrictName != null) _buildGridItem(context, 'عزلة الاختصاص', guardian.mainDistrictName, isFullWidth: true),
-                  if (guardian.villages != null && guardian.villages!.isNotEmpty)
-                     _buildListChips(context, 'القرى', guardian.villages!.map((e) => e['name'] as String).toList()),
-                   if (guardian.localities != null && guardian.localities!.isNotEmpty)
-                     _buildListChips(context, 'المحلات', guardian.localities!.map((e) => e['name'] as String).toList()),
-                   
-                   _buildSectionDivider(context, 'الحالة'),
-                   _buildGridItem(context, 'الحالة الوظيفية', guardian.employmentStatus, color: _parseStatusColor(guardian.employmentStatusColor), makeBold: true),
-                    if (guardian.stopDate != null) ...[
-                       _buildGridItem(context, 'تاريخ التوقف', guardian.stopDate, color: Colors.red),
-                       _buildGridItem(context, 'سبب التوقف', guardian.stopReason, isFullWidth: true),
-                    ],
-                    if (guardian.notes?.isNotEmpty == true)
-                      _buildGridItem(context, 'ملاحظات', guardian.notes, isFullWidth: true),
-               ]
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeaderCard(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24), // Soft edges
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 15, offset: const Offset(0, 4))],
-      ),
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-            Row(
-              children: [
-                Hero(
-                  tag: 'guardian_${guardian.id}',
-                  child: Container(
-                    decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.grey[200]!, width: 2)),
-                    child: CircleAvatar(
-                      radius: 35,
-                      backgroundColor: Colors.grey[100],
-                      backgroundImage: guardian.photoUrl != null ? NetworkImage(guardian.photoUrl!) : null,
-                      child: guardian.photoUrl == null ? const Icon(Icons.person, size: 35, color: Colors.grey) : null,
-                    ),
+      backgroundColor: Colors.grey[50],
+      body: CustomScrollView(
+        slivers: [
+          // Custom App Bar with gradient
+          SliverAppBar(
+            expandedHeight: 200,
+            pinned: true,
+            backgroundColor: primaryColor,
+            foregroundColor: Colors.white,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [primaryColor, Color(0xFF008000)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
+                child: SafeArea(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(guardian.name, style: const TextStyle(fontFamily: 'Tajawal', fontSize: 18, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 40),
+                      // Avatar
+                      Hero(
+                        tag: 'guardian_${guardian.id}',
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 3),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.2),
+                                blurRadius: 12,
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Colors.white,
+                            backgroundImage: guardian.photoUrl != null 
+                                ? NetworkImage(guardian.photoUrl!) 
+                                : null,
+                            child: guardian.photoUrl == null 
+                                ? const Icon(Icons.person, size: 40, color: Colors.grey) 
+                                : null,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      // Name
+                      Text(
+                        guardian.name,
+                        style: GoogleFonts.tajawal(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                       const SizedBox(height: 6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(color: Colors.blue.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(8)),
-                        child: Text('الرقم: ${guardian.serialNumber}', style: const TextStyle(fontFamily: 'Tajawal', color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 12)),
+                      // Serial & Status
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              guardian.serialNumber,
+                              style: GoogleFonts.tajawal(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: isActive ? Colors.green.shade300 : Colors.red.shade300,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              isActive ? 'نشط' : 'متوقف',
+                              style: GoogleFonts.tajawal(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                 if (guardian.phone != null)
-                  IconButton(
-                    onPressed: () => launchUrl(Uri.parse('tel:${guardian.phone}')),
-                    icon: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.1), shape: BoxShape.circle),
-                      child: const Icon(Icons.phone, color: Colors.green, size: 20),
-                    ),
-                  )
-              ],
+              ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildStatusItem('الهوية', guardian.identityStatusColor),
-                _buildStatusItem('الترخيص', guardian.licenseStatusColor),
-                _buildStatusItem('البطاقة', guardian.cardStatusColor),
-              ],
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.history),
+                tooltip: 'سجل التجديدات',
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => GuardianRenewalsScreen(guardian: guardian)),
+                ),
+              ),
+            ],
+          ),
+          
+          // Content
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Status Cards
+                  _buildStatusCardsRow(),
+                  const SizedBox(height: 16),
+                  
+                  // Quick Actions
+                  _buildQuickActionsRow(context),
+                  const SizedBox(height: 16),
+                  
+                  // Info Sections
+                  _buildSection(
+                    context,
+                    title: 'المعلومات الشخصية',
+                    icon: Icons.person_outline,
+                    children: [
+                      _buildGridItem('الاسم الكامل', guardian.name, isFullWidth: true),
+                      _buildGridItem('اسم الأب', guardian.fatherName),
+                      _buildGridItem('اسم الجد', guardian.grandfatherName),
+                      _buildGridItem('اللقب', guardian.familyName),
+                      if (guardian.greatGrandfatherName != null) 
+                        _buildGridItem('الجد الكبير', guardian.greatGrandfatherName),
+                      _buildGridItem('تاريخ الميلاد', guardian.birthDate),
+                      _buildGridItem('مكان الميلاد', guardian.birthPlace),
+                      _buildGridItem('هاتف المنزل', guardian.homePhone),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  _buildSection(
+                    context,
+                    title: 'الهوية والسكن',
+                    icon: Icons.badge_outlined,
+                    children: [
+                      _buildGridItem('نوع الإثبات', guardian.proofType),
+                      _buildGridItem('رقم الإثبات', guardian.proofNumber, isCopyable: true),
+                      _buildGridItem('جهة الإصدار', guardian.issuingAuthority),
+                      _buildGridItem('تاريخ الإصدار', guardian.issueDate),
+                      _buildGridItem('تاريخ الانتهاء', guardian.expiryDate, color: guardian.identityStatusColor, makeBold: true),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  _buildSection(
+                    context,
+                    title: 'المهنة والترخيص',
+                    icon: Icons.work_outline,
+                    children: [
+                      _buildGridItem('المؤهل العلمي', guardian.qualification),
+                      _buildGridItem('الوظيفة', guardian.job),
+                      _buildGridItem('جهة العمل', guardian.workplace),
+                      if (guardian.experienceNotes?.isNotEmpty == true) 
+                        _buildGridItem('ملاحظات الخبرة', guardian.experienceNotes, isFullWidth: true),
+                      
+                      _buildSectionDivider(context, 'الترخيص', onRenew: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (_) => RenewLicenseSheet(guardian: guardian),
+                        );
+                      }),
+                      _buildGridItem('رقم القرار', guardian.ministerialDecisionNumber),
+                      _buildGridItem('تاريخ القرار', guardian.ministerialDecisionDate),
+                      _buildGridItem('رقم الترخيص', guardian.licenseNumber, isCopyable: true),
+                      _buildGridItem('تاريخ انتهائه', guardian.licenseExpiryDate, color: guardian.licenseStatusColor, makeBold: true),
+                      
+                      _buildSectionDivider(context, 'بطاقة المهنة', onRenew: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (_) => RenewCardSheet(guardian: guardian),
+                        );
+                      }),
+                      _buildGridItem('رقم البطاقة', guardian.professionCardNumber, isCopyable: true),
+                      _buildGridItem('تاريخ انتهائها', guardian.professionCardExpiryDate, color: guardian.cardStatusColor, makeBold: true),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  _buildSection(
+                    context,
+                    title: 'المواقع والملاحظات',
+                    icon: Icons.map_outlined,
+                    children: [
+                      if (guardian.mainDistrictName != null) 
+                        _buildGridItem('عزلة الاختصاص', guardian.mainDistrictName, isFullWidth: true),
+                      if (guardian.villages != null && guardian.villages!.isNotEmpty)
+                        _buildListChips('القرى', guardian.villages!.map((e) => e['name'] as String).toList()),
+                      if (guardian.localities != null && guardian.localities!.isNotEmpty)
+                        _buildListChips('المحلات', guardian.localities!.map((e) => e['name'] as String).toList()),
+                      
+                      _buildSectionDivider(context, 'الحالة'),
+                      _buildGridItem('الحالة الوظيفية', guardian.employmentStatus, color: _parseStatusColor(guardian.employmentStatusColor), makeBold: true),
+                      if (guardian.stopDate != null) ...[
+                        _buildGridItem('تاريخ التوقف', guardian.stopDate, color: Colors.red),
+                        _buildGridItem('سبب التوقف', guardian.stopReason, isFullWidth: true),
+                      ],
+                      if (guardian.notes?.isNotEmpty == true)
+                        _buildGridItem('ملاحظات', guardian.notes, isFullWidth: true),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+                ],
+              ),
             ),
+          ),
         ],
-      )
+      ),
     );
   }
 
-  Widget _buildStatusItem(String label, Color color) {
-    return Column(
+  Widget _buildStatusCardsRow() {
+    return Row(
       children: [
-        Container(
-          width: 12, height: 12,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 2), boxShadow: [BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 6)]),
+        Expanded(
+          child: _buildStatusCard(
+            'الهوية',
+            guardian.identityStatusColor,
+            guardian.identityRemainingDays,
+          ),
         ),
-        const SizedBox(height: 6),
-        Text(label, style: TextStyle(fontFamily: 'Tajawal', color: Colors.grey[600], fontSize: 12)),
+        const SizedBox(width: 10),
+        Expanded(
+          child: _buildStatusCard(
+            'الترخيص',
+            guardian.licenseStatusColor,
+            guardian.licenseRemainingDays,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: _buildStatusCard(
+            'البطاقة',
+            guardian.cardStatusColor,
+            guardian.cardRemainingDays,
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget _buildStatusCard(String title, Color color, int? remainingDays) {
+    String statusText = 'سارية';
+    if (remainingDays != null) {
+      if (remainingDays < 0) {
+        statusText = 'منتهية';
+      } else if (remainingDays <= 30) {
+        statusText = '$remainingDays يوم';
+      } else if (remainingDays <= 90) {
+        statusText = 'قريباً';
+      }
+    }
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+              border: Border.all(color: color, width: 2),
+            ),
+            child: Center(
+              child: remainingDays != null && remainingDays <= 90
+                  ? Text(
+                      remainingDays < 0 ? '!' : '$remainingDays',
+                      style: GoogleFonts.tajawal(
+                        color: color,
+                        fontWeight: FontWeight.bold,
+                        fontSize: remainingDays.abs() > 99 ? 11 : 13,
+                      ),
+                    )
+                  : Icon(Icons.check, color: color, size: 20),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: GoogleFonts.tajawal(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[700],
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            statusText,
+            style: GoogleFonts.tajawal(
+              fontSize: 11,
+              color: color,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActionsRow(BuildContext context) {
+    return Row(
+      children: [
+        if (guardian.phone != null)
+          Expanded(
+            child: _buildQuickActionButton(
+              context,
+              icon: Icons.phone,
+              label: 'اتصال',
+              color: Colors.green,
+              onTap: () => launchUrl(Uri.parse('tel:${guardian.phone}')),
+            ),
+          ),
+        if (guardian.phone != null) const SizedBox(width: 10),
+        Expanded(
+          child: _buildQuickActionButton(
+            context,
+            icon: Icons.refresh,
+            label: 'تجديد',
+            color: Colors.orange,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => GuardianRenewalsScreen(guardian: guardian)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickActionButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: color, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: GoogleFonts.tajawal(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildSection(BuildContext context, {required String title, required IconData icon, required List<Widget> children}) {
-     return Container(
-       decoration: BoxDecoration(
-         color: Colors.white,
-         borderRadius: BorderRadius.circular(20),
-         border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
-         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10)],
-       ),
-       padding: const EdgeInsets.all(20),
-       child: Column(
-         crossAxisAlignment: CrossAxisAlignment.start,
-         children: [
-            Row(
-              children: [
-                Icon(icon, color: Theme.of(context).primaryColor),
-                const SizedBox(width: 10),
-                Text(title, style: TextStyle(fontFamily: 'Tajawal', fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children: children,
-            )
-         ],
-       ),
-     );
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.shade100),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: primaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: primaryColor, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: GoogleFonts.tajawal(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Wrap(
+            spacing: 16,
+            runSpacing: 16,
+            children: children,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildSectionDivider(BuildContext context, String label, {VoidCallback? onRenew}) {
-     return Container(
-       width: double.infinity,
-       padding: const EdgeInsets.symmetric(vertical: 8),
-       child: Row(
-         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-         children: [
-           Text(label, style: TextStyle(fontFamily: 'Tajawal', fontWeight: FontWeight.bold, fontSize: 14, color: Theme.of(context).primaryColor)),
-           if (onRenew != null)
-             TextButton.icon(
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(top: 16, bottom: 8),
+      child: Row(
+        children: [
+          Container(
+            width: 4,
+            height: 20,
+            decoration: BoxDecoration(
+              color: primaryColor,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            label,
+            style: GoogleFonts.tajawal(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              color: primaryColor,
+            ),
+          ),
+          const Spacer(),
+          if (onRenew != null)
+            TextButton.icon(
               onPressed: onRenew,
               style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: VisualDensity.compact,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                backgroundColor: Colors.orange.withValues(alpha: 0.1),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              icon: const Icon(Icons.refresh, size: 16),
-              label: const Text('تجديد', style: TextStyle(fontFamily: 'Tajawal', fontSize: 12)),
-             )
-         ],
-       ),
-     );
+              icon: const Icon(Icons.refresh, size: 16, color: Colors.orange),
+              label: Text(
+                'تجديد',
+                style: GoogleFonts.tajawal(fontSize: 12, color: Colors.orange, fontWeight: FontWeight.bold),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
-  Widget _buildGridItem(BuildContext context, String label, String? value, {bool isFullWidth = false, bool isCopyable = false, Color? color, bool makeBold = false}) {
-     if (value == null || value.isEmpty) return const SizedBox.shrink();
-     
-     
-     return SizedBox(
-       width: isFullWidth ? double.infinity : 140, // Fixed width for 2 columns on most phones
-       child: Column(
-         crossAxisAlignment: CrossAxisAlignment.start,
-         children: [
-           Text(label, style: TextStyle(fontFamily: 'Tajawal', color: Colors.grey[500], fontSize: 11)),
-           const SizedBox(height: 4),
-           SelectableText(
-             value, 
-             style: TextStyle(
-               fontFamily: 'Tajawal', 
-               color: color ?? Colors.black87, 
-               fontSize: 13, 
-               fontWeight: makeBold ? FontWeight.bold : FontWeight.w500,
-               height: 1.4
-             )
-           )
-         ],
-       ),
-     );
+  Widget _buildGridItem(String label, String? value, {bool isFullWidth = false, bool isCopyable = false, Color? color, bool makeBold = false}) {
+    if (value == null || value.isEmpty) return const SizedBox.shrink();
+    
+    return SizedBox(
+      width: isFullWidth ? double.infinity : 140,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.tajawal(
+              color: Colors.grey[500],
+              fontSize: 11,
+            ),
+          ),
+          const SizedBox(height: 4),
+          SelectableText(
+            value,
+            style: GoogleFonts.tajawal(
+              color: color ?? Colors.black87,
+              fontSize: 13,
+              fontWeight: makeBold ? FontWeight.bold : FontWeight.w500,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
   }
-  
-  // Need to fix context access in _buildGridItem above or pass it. 
-  // Refactoring to helper function usage correctly.
 
-
-  Widget _buildListChips(BuildContext context, String title, List<String> items) {
+  Widget _buildListChips(String title, List<String> items) {
     if (items.isEmpty) return const SizedBox.shrink();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: TextStyle(fontFamily: 'Tajawal', color: Colors.grey[500], fontSize: 11)),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: items.map((tag) => Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(color: Colors.blue.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.blue.withValues(alpha: 0.1))),
-            child: Text(tag, style: TextStyle(color: Colors.blue[800], fontSize: 12, fontFamily: 'Tajawal')),
-          )).toList(),
-        ),
-      ],
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.tajawal(color: Colors.grey[500], fontSize: 11),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: items.map((tag) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: primaryColor.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: primaryColor.withValues(alpha: 0.2)),
+              ),
+              child: Text(
+                tag,
+                style: GoogleFonts.tajawal(
+                  color: primaryColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            )).toList(),
+          ),
+        ],
+      ),
     );
   }
 
@@ -315,4 +595,3 @@ class GuardianDetailsScreen extends StatelessWidget {
     return Colors.black;
   }
 }
-

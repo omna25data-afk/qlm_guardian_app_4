@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:guardian_app/features/admin/data/models/admin_guardian_model.dart';
@@ -323,15 +323,30 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
   }
 
   // --- UI Helpers ---
+  static const primaryColor = Color(0xFF006400);
 
   Widget _buildSectionTitle(String title, IconData icon) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Row(
         children: [
-          Icon(icon, color: Theme.of(context).primaryColor, size: 20),
-          const SizedBox(width: 8),
-          Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: primaryColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: primaryColor, size: 18),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            title,
+            style: GoogleFonts.tajawal(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: primaryColor,
+            ),
+          ),
         ],
       ),
     );
@@ -339,21 +354,40 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
 
   Widget _buildTextField(TextEditingController c, String label, IconData icon, {bool required = false, int maxLines = 1, TextInputType type = TextInputType.text}) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
+      padding: const EdgeInsets.only(bottom: 14.0),
       child: TextFormField(
         controller: c,
         maxLines: maxLines,
         keyboardType: type,
-        style: const TextStyle(fontFamily: 'Tajawal', color: Colors.black, fontWeight: FontWeight.bold),
+        style: GoogleFonts.tajawal(color: Colors.black87, fontWeight: FontWeight.w600, fontSize: 14),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(fontFamily: 'Tajawal', color: Colors.grey[600], fontWeight: FontWeight.normal),
-          hintStyle: TextStyle(fontFamily: 'Tajawal', color: Colors.grey[400]),
-          prefixIcon: Icon(icon, color: Colors.grey[600], size: 20),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          labelStyle: GoogleFonts.tajawal(color: Colors.grey[600], fontWeight: FontWeight.normal, fontSize: 13),
+          hintStyle: GoogleFonts.tajawal(color: Colors.grey[400]),
+          prefixIcon: Container(
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, color: Colors.grey[600], size: 18),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide(color: Colors.grey.shade200),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide(color: Colors.grey.shade200),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: primaryColor, width: 2),
+          ),
           filled: true,
           fillColor: Colors.grey[50],
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           floatingLabelBehavior: FloatingLabelBehavior.auto,
         ),
         validator: required ? (v) => v == null || v.isEmpty ? 'هذا الحقل مطلوب' : null : null,
@@ -363,39 +397,67 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
 
   Widget _buildDatePicker(String label, DateTime? date, Function(DateTime) onSelect) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
+      padding: const EdgeInsets.only(bottom: 14.0),
       child: InkWell(
         onTap: () async {
-           final d = await showDatePicker(
-             context: context, 
-             initialDate: date ?? DateTime.now(), 
-             firstDate: DateTime(1900), 
-             lastDate: DateTime(2100),
-             locale: const Locale('ar', 'SA'),
-             builder: (context, child) {
-               return Theme(
-                 data: ThemeData.light().copyWith(
-                   colorScheme: ColorScheme.light(primary: Theme.of(context).primaryColor),
-                 ),
-                 child: child!,
-               );
-             }
-           );
-           if (d != null) onSelect(d);
+          final d = await showDatePicker(
+            context: context,
+            initialDate: date ?? DateTime.now(),
+            firstDate: DateTime(1900),
+            lastDate: DateTime(2100),
+            locale: const Locale('ar', 'SA'),
+            builder: (context, child) {
+              return Theme(
+                data: ThemeData.light().copyWith(
+                  colorScheme: const ColorScheme.light(primary: primaryColor),
+                ),
+                child: child!,
+              );
+            },
+          );
+          if (d != null) onSelect(d);
         },
-        child: InputDecorator(
-          decoration: InputDecoration(
-             labelText: label,
-             labelStyle: TextStyle(fontFamily: 'Tajawal', color: Colors.grey[600], fontWeight: FontWeight.normal),
-             prefixIcon: Icon(Icons.calendar_today, color: Colors.grey[600], size: 20),
-             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-             filled: true,
-             fillColor: Colors.grey[50],
-             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          decoration: BoxDecoration(
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.grey.shade200),
           ),
-          child: Text(
-            date != null ? _formatDate(date) : '',
-            style: const TextStyle(fontSize: 14, fontFamily: 'Tajawal', fontWeight: FontWeight.bold),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(Icons.calendar_today, color: Colors.grey[600], size: 18),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: GoogleFonts.tajawal(color: Colors.grey[600], fontSize: 11),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      date != null ? _formatDate(date) : 'اختر التاريخ',
+                      style: GoogleFonts.tajawal(
+                        fontSize: 14,
+                        fontWeight: date != null ? FontWeight.bold : FontWeight.normal,
+                        color: date != null ? Colors.black87 : Colors.grey[400],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.arrow_drop_down, color: Colors.grey[400]),
+            ],
           ),
         ),
       ),
@@ -697,64 +759,145 @@ class _AddEditGuardianScreenState extends State<AddEditGuardianScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.guardian != null;
+    
     return Scaffold(
-      appBar: AppBar(title: Text(widget.guardian == null ? 'إضافة أمين جديد' : 'تعديل بيانات الأمين', style: const TextStyle(fontFamily: 'Tajawal', fontWeight: FontWeight.bold))),
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        title: Text(
+          isEditing ? 'تعديل بيانات الأمين' : 'إضافة أمين جديد',
+          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+        centerTitle: true,
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [primaryColor, Color(0xFF008000)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+      ),
       body: Form(
         key: _formKey,
         child: Theme(
           data: Theme.of(context).copyWith(
-            inputDecorationTheme: InputDecorationTheme(border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
-            colorScheme: ColorScheme.light(primary: Theme.of(context).primaryColor),
+            inputDecorationTheme: InputDecorationTheme(
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+            ),
+            colorScheme: const ColorScheme.light(primary: primaryColor),
           ),
           child: Stepper(
             type: StepperType.vertical,
             currentStep: _currentStep,
+            elevation: 0,
             onStepTapped: (index) => setState(() => _currentStep = index),
             onStepContinue: () {
-               if (_currentStep < _steps.length - 1) {
-                 setState(() => _currentStep += 1);
-               } else {
-                 _save();
-               }
+              if (_currentStep < _steps.length - 1) {
+                setState(() => _currentStep += 1);
+              } else {
+                _save();
+              }
             },
             onStepCancel: () {
-               if (_currentStep > 0) {
+              if (_currentStep > 0) {
                 setState(() => _currentStep -= 1);
               }
             },
             controlsBuilder: (ctx, details) {
+              final isLastStep = _currentStep == _steps.length - 1;
               return Padding(
-                padding: const EdgeInsets.only(top: 24.0),
+                padding: const EdgeInsets.only(top: 28.0),
                 child: Row(
                   children: [
+                    // Continue/Save Button
                     Expanded(
-                      child: ElevatedButton(
-                        onPressed: _isLoading ? null : details.onStepContinue,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          elevation: 2,
+                      flex: 2,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [primaryColor, Color(0xFF008000)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(14),
+                          boxShadow: [
+                            BoxShadow(
+                              color: primaryColor.withValues(alpha: 0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
-                        child: _isLoading 
-                          ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                          : Text(_currentStep == _steps.length - 1 ? 'حفظ البيانات' : 'التالي', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Tajawal')),
+                        child: ElevatedButton(
+                          onPressed: _isLoading ? null : details.onStepContinue,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                            elevation: 0,
+                            shadowColor: Colors.transparent,
+                          ),
+                          child: _isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(isLastStep ? Icons.save : Icons.arrow_back, size: 20),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      isLastStep ? 'حفظ البيانات' : 'التالي',
+                                      style: GoogleFonts.tajawal(fontSize: 15, fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                        ),
                       ),
                     ),
+                    // Back Button
                     if (_currentStep > 0) ...[
-                       const SizedBox(width: 12),
-                       Expanded(
-                         child: TextButton(
-                           onPressed: details.onStepCancel, 
-                           style: TextButton.styleFrom(
-                             padding: const EdgeInsets.symmetric(vertical: 16),
-                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Colors.grey[300]!)),
-                           ),
-                           child: const Text('السابق', style: TextStyle(fontSize: 16, color: Colors.black87, fontFamily: 'Tajawal')),
-                         ),
-                       )
-                    ]
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: details.onStepCancel,
+                            borderRadius: BorderRadius.circular(14),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(color: Colors.grey.shade300),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.arrow_forward, size: 18, color: Colors.black54),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'السابق',
+                                    style: GoogleFonts.tajawal(
+                                      fontSize: 14,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               );

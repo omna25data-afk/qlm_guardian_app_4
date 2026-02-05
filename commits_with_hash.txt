@@ -1,0 +1,20 @@
+﻿ab63401ee14ddf9d4add58a64b5d30ba8b8affc8 | 2026-02-03 17:24:27 +0300 | Refactor: Separate Admin and Guardian features and folders
+b5095c738750a9382e07911d4a872e0a31024948 | 2026-02-03 02:32:35 +0300 | fix: Resolve VERSION conflict and push frontend updates
+0ff44a8e5efdf30c661e5e83edd42b60d0484143 | 2026-02-03 02:14:56 +0300 | feat: Implement Record Books, Registry Entries, and Create Entry Wizard
+3540203abeb7db26decd83ea57530b0fb4498636 | 2026-02-02 22:13:34 +0000 | Deploy: New Release Build [Mon Feb  2 10:13:34 PM UTC 2026]
+9fc279d9d3443f010970095e0a83694a2466c728 | 2026-02-02 22:02:35 +0000 | Deploy: New Release Build [Mon Feb  2 10:02:35 PM UTC 2026]
+119ee3852afebae0925ae314adf905301525bcd7 | 2026-02-02 21:57:12 +0000 | Deploy: New Release Build [Mon Feb  2 09:57:12 PM UTC 2026]
+905815dc321ef645b985aec6f3d04ca32bdd0fd9 | 2026-02-03 00:57:04 +0300 | Fix invalid intl version in pubspec.yaml
+18a8c03d981bbcebf29320383b7e9cb16cfb8ceb | 2026-02-03 00:52:21 +0300 | Fix intl dependency version conflict
+1be9aeeccf66032f41eff6275354846ca705bbac | 2026-02-03 00:15:46 +0300 | Fix auto_release.sh zip dependency
+58ef5bd4c8f41a58e840ee39d8bc452468ff589e | 2026-02-02 23:52:37 +0300 | Add automated release scripts
+e6f0c422bf252f683a239851c704bccb81c5ad20 | 2026-02-02 18:06:55 +0000 | chore: Bump version to V1.1.03
+6dccee4de807c6a8041a6cf39bc580a8d15ec13b | 2026-02-02 17:54:06 +0000 | chore: Bump version to V1.1.02
+d187ef29198efef12f49fe9515e6db89ba860ca4 | 2026-02-02 17:26:43 +0000 | Deploy: New Release Build [Mon Feb  2 05:26:43 PM UTC 2026]
+807bc8b59c5a4a5a2a8c4358fd806dec5e342b60 | 2026-02-02 17:06:05 +0000 | Deploy: New Release Build [Mon Feb  2 05:06:05 PM UTC 2026]
+82f01b09716e268227e1da02e866c2f90b6fffba | 2026-02-02 19:57:52 +0300 | Implement standardized UI Theme across app
+2741f1899b181e0832e91b75262921b231cbc2d6 | 2026-02-02 16:36:20 +0000 | Deploy: New Release Build [Mon Feb  2 04:36:20 PM UTC 2026]
+74e0fbbb5e8e0535a6d227488a27c049fcbad63c | 2026-02-02 06:23:22 +0300 | Upgrade intl dependency to ^0.20.2 to match flutter_localizations
+bbbeb2c092e7991237b1562bceda58672ead909f | 2026-02-02 03:20:21 +0000 | Deploy: New Release Build [Mon Feb  2 03:20:21 AM UTC 2026]
+5dafe1ca11bbd0259a602b9b4d4af07e5dc546e2 | 2026-02-02 06:13:13 +0300 | Fix syntax error in main_common.dart (extra bracket)
+0ca9e554fe703ddeadb7e0062b4ce030fa3db65b | 2026-02-02 06:09:26 +0300 | Merge branch 'main' of https://github.com/omna25data-afk/qlm_guardian_app # Please enter a commit message to explain why this merge is necessary, # especially if it merges an updated upstream into a topic branch. # # Lines starting with '#' will be ignored, and an empty message aborts # the commit.
