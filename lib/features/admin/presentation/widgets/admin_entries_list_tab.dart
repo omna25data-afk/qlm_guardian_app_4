@@ -745,7 +745,7 @@ class _AdminEntriesListTabState extends State<AdminEntriesListTab> {
             if (key.isNotEmpty) ...[
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                margin: const EdgeInsets.only(bottom: 12, top: groupIndex > 0 ? 16 : 0),
+                margin: EdgeInsets.only(bottom: 12, top: groupIndex > 0 ? 16 : 0),
                 decoration: BoxDecoration(
                   color: primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
