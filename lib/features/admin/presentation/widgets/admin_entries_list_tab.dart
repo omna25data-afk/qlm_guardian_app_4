@@ -633,7 +633,7 @@ class _AdminEntriesListTabState extends State<AdminEntriesListTab> {
               const SizedBox(width: 8),
               _buildStatChip(Icons.check_circle, '${_filteredEntries.where((e) => e.statusLabel.contains('معتمد')).length}', 'معتمد'),
               const SizedBox(width: 8),
-              _buildStatChip(Icons.attach_money, _formatAmount(_filteredEntries.fold(0.0, (sum, e) => sum + e.totalFees)), 'ر.س'),
+              _buildStatChip(Icons.attach_money, _formatAmount(_filteredEntries.fold(0.0, (sum, e) => sum + e.totalFees)), 'ر.ي'),
             ],
           ),
         ),
@@ -656,9 +656,9 @@ class _AdminEntriesListTabState extends State<AdminEntriesListTab> {
 
   String _formatAmount(double amount) {
     if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}M';
+      return '${(amount / 1000000).toStringAsFixed(1)} مليون';
     } else if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(1)}K';
+      return '${(amount / 1000).toStringAsFixed(1)} ألف';
     }
     return amount.toStringAsFixed(0);
   }

@@ -269,7 +269,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [primaryColor.withOpacity(0.1), Colors.white],
+          colors: [primaryColor.withValues(alpha: 0.1), Colors.white],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -311,7 +311,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -322,7 +322,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -458,9 +458,9 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: isActive ? activeColor.withOpacity(0.1) : Colors.grey[100],
+          color: isActive ? activeColor.withValues(alpha: 0.1) : Colors.grey[100],
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: isActive ? activeColor.withOpacity(0.3) : Colors.grey.shade200),
+          border: Border.all(color: isActive ? activeColor.withValues(alpha: 0.3) : Colors.grey.shade200),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -553,7 +553,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -566,7 +566,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
+                color: primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(_getGroupIcon(), color: primaryColor, size: 20),
@@ -609,7 +609,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
     final status = record['status'] ?? 'active';
     final totalPages = record['total_pages'] ?? 0;
     final entriesCount = record['guardian_entries_count'] ?? 0;
-    final constraintsCount = record['constraints_count'] ?? 0; // if available from my previous backend change
+
     
     // Status Logic
     Color statusColor = Colors.grey;
@@ -627,7 +627,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
         border: inGroup ? Border(bottom: BorderSide(color: Colors.grey.shade200)) : null,
         boxShadow: inGroup ? null : [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -642,7 +642,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.1),
+                  color: primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text('#$bookNumber', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, color: primaryColor)),
@@ -651,7 +651,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
+                  color: statusColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(statusLabel, style: GoogleFonts.tajawal(fontSize: 11, color: statusColor, fontWeight: FontWeight.w500)),
@@ -676,7 +676,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
             children: [
               _buildInfoChip(Icons.category_outlined, typeName),
               _buildInfoChip(Icons.format_list_numbered, '$entriesCount قيد'),
-              _buildInfoChip(Icons.description_outlined, '${totalPages} صفحة'),
+              _buildInfoChip(Icons.description_outlined, '$totalPages صفحة'),
             ],
           ),
         ],
@@ -702,18 +702,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
     );
   }
 
-  Color _getStatusColor(String status) {
-    if (status.contains('success') || status.contains('موثق') || status.contains('معتمد')) {
-      return Colors.green;
-    }
-    if (status.contains('warning') || status.contains('مسودة') || status.contains('قيد')) {
-      return Colors.orange;
-    }
-    if (status.contains('danger') || status.contains('ملغى') || status.contains('مرفوض')) {
-      return Colors.red;
-    }
-    return Colors.grey;
-  }
+
 
   void _showFilterSheet() {
     showModalBottomSheet(
@@ -956,7 +945,7 @@ class _AdminRecordsListTabState extends State<AdminRecordsListTab> {
                 Navigator.pop(context);
                 _loadData();
               },
-              activeColor: primaryColor,
+              activeThumbColor: primaryColor,
             ),
           ],
         ),

@@ -3,6 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:guardian_app/core/constants/api_constants.dart';
 import 'package:guardian_app/features/auth/data/repositories/auth_repository.dart';
 
@@ -157,7 +160,7 @@ class _ReportsTabState extends State<ReportsTab> with SingleTickerProviderStateM
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -165,6 +168,19 @@ class _ReportsTabState extends State<ReportsTab> with SingleTickerProviderStateM
       ),
       child: Column(
         children: [
+          // Header with Export button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('تصفية النتائج', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, fontSize: 16)),
+              IconButton(
+                onPressed: _showExportOptions,
+                icon: const Icon(Icons.download, color: primaryColor),
+                tooltip: 'تصدير التقرير',
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
@@ -319,7 +335,7 @@ class _ReportsTabState extends State<ReportsTab> with SingleTickerProviderStateM
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -334,7 +350,7 @@ class _ReportsTabState extends State<ReportsTab> with SingleTickerProviderStateM
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, color: color, size: 20),
@@ -368,7 +384,7 @@ class _ReportsTabState extends State<ReportsTab> with SingleTickerProviderStateM
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: primaryColor.withOpacity(0.1),
+              color: primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
@@ -423,7 +439,7 @@ class _ReportsTabState extends State<ReportsTab> with SingleTickerProviderStateM
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [primaryColor, primaryColor.withOpacity(0.8)],
+          colors: [primaryColor, primaryColor.withValues(alpha: 0.8)],
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
         ),
@@ -465,7 +481,7 @@ class _ReportsTabState extends State<ReportsTab> with SingleTickerProviderStateM
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -475,7 +491,7 @@ class _ReportsTabState extends State<ReportsTab> with SingleTickerProviderStateM
         tilePadding: const EdgeInsets.symmetric(horizontal: 16),
         childrenPadding: const EdgeInsets.all(16),
         leading: CircleAvatar(
-          backgroundColor: primaryColor.withOpacity(0.1),
+          backgroundColor: primaryColor.withValues(alpha: 0.1),
           child: Text(
             '${guardian['total_entries']}',
             style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, color: primaryColor),
@@ -509,7 +525,7 @@ class _ReportsTabState extends State<ReportsTab> with SingleTickerProviderStateM
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: primaryColor.withOpacity(0.1),
+        color: primaryColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
@@ -537,7 +553,7 @@ class _ReportsTabState extends State<ReportsTab> with SingleTickerProviderStateM
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
-            headingRowColor: WidgetStateProperty.all(primaryColor.withOpacity(0.1)),
+            headingRowColor: WidgetStateProperty.all(primaryColor.withValues(alpha: 0.1)),
             columns: [
               DataColumn(label: Text('نوع العقد', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold))),
               DataColumn(label: Text('سنوي', style: GoogleFonts.tajawal(fontWeight: FontWeight.bold))),
@@ -578,10 +594,98 @@ class _ReportsTabState extends State<ReportsTab> with SingleTickerProviderStateM
     if (amount == null) return '0';
     final num = (amount is int) ? amount.toDouble() : (amount as double);
     if (num >= 1000000) {
-      return '${(num / 1000000).toStringAsFixed(1)}م';
+      return '${(num / 1000000).toStringAsFixed(1)} مليون';
     } else if (num >= 1000) {
-      return '${(num / 1000).toStringAsFixed(0)}ك';
+      return '${(num / 1000).toStringAsFixed(1)} ألف';
     }
     return num.toStringAsFixed(0);
+  }
+
+  void _showExportOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('تصدير التقرير', style: GoogleFonts.tajawal(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 20),
+            ListTile(
+              leading: const Icon(Icons.table_chart, color: Colors.green),
+              title: Text('ملف Excel', style: GoogleFonts.tajawal()),
+              onTap: () {
+                Navigator.pop(context);
+                _downloadAndShareReport('excel');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
+              title: Text('ملف PDF', style: GoogleFonts.tajawal()),
+              onTap: () {
+                Navigator.pop(context);
+                _downloadAndShareReport('pdf');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _downloadAndShareReport(String format) async {
+    setState(() => _isLoading = true);
+    try {
+      final authRepo = Provider.of<AuthRepository>(context, listen: false);
+      final token = await authRepo.getToken();
+
+      final params = <String, String>{
+        'format': format,
+        'type': 'guardian', // Using guardian stats as base
+        'year': '${_selectedYear}',
+        'period_type': _periodType,
+        if (_periodValue != null) 'period_value': _periodValue!,
+      };
+
+      final uri = Uri.parse('${ApiConstants.baseUrl}/reports/export').replace(queryParameters: params);
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json', // Backend handles format via query param, but basic accept is good
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final dir = await getApplicationDocumentsDirectory();
+        final ext = format == 'pdf' ? 'pdf' : 'xlsx';
+        final filename = 'report_${DateTime.now().millisecondsSinceEpoch}.$ext';
+        final file = File('${dir.path}/$filename');
+        
+        await file.writeAsBytes(response.bodyBytes);
+        
+        if (mounted) {
+           await Share.shareXFiles([XFile(file.path)], text: 'تقرير الإحصائيات');
+        }
+      } else {
+        throw Exception('Failed to download: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Export error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('فشل التصدير: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 }
